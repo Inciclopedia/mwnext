@@ -12,7 +12,7 @@ import PageLoading from '@/components/page-loading';
 import '@/locales/i18n';
 
 // load app SCSS styles
-import '@/styles/App.scss';
+import(`./themes/${process.env.REACT_APP_FLAVOR}/styles/App.scss`);
 
 // load Toast styles
 import 'react-toastify/dist/ReactToastify.css';
@@ -20,7 +20,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const ReactApp: React.FC = () => {
   return (
     <Router>
-      <Helmet titleTemplate="%s - mwnext" defaultTitle="mwnext">
+      <Helmet titleTemplate={"%s - " + process.env.REACT_APP_NAME} defaultTitle={process.env.REACT_APP_NAME}>
         <meta name="description" content="Alternative client for MediaWiki" />
       </Helmet>
 

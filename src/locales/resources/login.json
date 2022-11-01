@@ -1,0 +1,26 @@
+{
+  "en": {
+    "signIn": "Sign in",
+    "username": "Username",
+    "password": "Password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "signUp": "Don't have an account? Sign Up"
+  },
+  "es": {
+    "signIn": "Iniciar sesión",
+    "username": "Usuario",
+    "password": "Contraseña",
+    "rememberMe": "Recordarme",
+    "forgotPassword": "¿Olvidaste la contraseña?",
+    "signUp": "¿No tienes cuenta? ¡Crea una!"
+  },
+  "ca": {
+    "signIn": "Entreu",
+    "username": "Usuari",
+    "password": "Clau",
+    "rememberMe": "Recordeu-me",
+    "forgotPassword": "Heu oblidat la clau?",
+    "signUp": "No teniu compte? Creeu-ne un!"
+  }
+}

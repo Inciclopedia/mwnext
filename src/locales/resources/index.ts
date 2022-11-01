@@ -2,6 +2,7 @@ import { Resource } from 'i18next';
 import languages from '../languages';
 import home from './home.json';
 import footer from './footer.json';
+import login from './login.json';
 
 interface IResource {
   [key: string]: Resource;
@@ -10,6 +11,7 @@ interface IResource {
 const mergeResource: IResource = {
   home,
   footer,
+  login,
 };
 
 export const langs = Object.keys(languages);

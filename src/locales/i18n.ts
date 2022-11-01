@@ -7,7 +7,7 @@ const isProduction = env.NodeEnv === 'production';
 
 i18n.use(initReactI18next).init({
   resources,
-  fallbackLng: ['en'],
+  fallbackLng: [process.env.REACT_APP_DEFAULT_LANGUAGE],
   supportedLngs: langs,
   debug: !isProduction,
   interpolation: {

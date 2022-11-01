@@ -12,13 +12,15 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import useImage from "@/hooks/useImage";
+import {useTranslation} from "react-i18next";
 
 function Copyright(props: any) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
-            <Link color="inherit" href="https://mui.com/">
-                Your Website
+            <Link color="inherit" href={process.env.REACT_APP_URL}>
+                {process.env.REACT_APP_NAME}
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -37,6 +39,9 @@ export default function Login() {
             password: data.get('password'),
         });
     };
+    const { t } = useTranslation();
+    const landing = useImage("landing.jpg");
+    const logo = useImage("logo.png");
 
     return (
         <ThemeProvider theme={theme}>
@@ -48,13 +53,17 @@ export default function Login() {
                     sm={4}
                     md={7}
                     sx={{
-                        backgroundImage: 'url(https://source.unsplash.com/random)',
+                        backgroundImage: `url('${landing.image}');`,
                         backgroundRepeat: 'no-repeat',
                         backgroundColor: (t) =>
                             t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                     }}
+                    container
+                    direction="column"
+                    justifyContent="center"
+                    alignItems="center"
                 />
                 <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
                     <Box
@@ -66,21 +75,19 @@ export default function Login() {
                             alignItems: 'center',
                         }}
                     >
-                        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                            <LockOutlinedIcon />
-                        </Avatar>
+                        <img src={logo.image} alt={process.env.REACT_APP_NAME} style={{width: '150px', height: 'auto'}} />
                         <Typography component="h1" variant="h5">
-                            Sign in
+                            {t('login.signIn')}
                         </Typography>
                         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
                             <TextField
                                 margin="normal"
                                 required
                                 fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
+                                id="username"
+                                label={t('login.username')}
+                                name="username"
+                                autoComplete="username"
                                 autoFocus
                             />
                             <TextField
@@ -88,14 +95,14 @@ export default function Login() {
                                 required
                                 fullWidth
                                 name="password"
-                                label="Password"
+                                label={t('login.password')}
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
                             />
                             <FormControlLabel
                                 control={<Checkbox value="remember" color="primary" />}
-                                label="Remember me"
+                                label={t('login.rememberMe')}
                             />
                             <Button
                                 type="submit"
@@ -103,17 +110,17 @@ export default function Login() {
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
                             >
-                                Sign In
+                                {t('login.signIn')}
                             </Button>
                             <Grid container>
                                 <Grid item xs>
                                     <Link href="#" variant="body2">
-                                        Forgot password?
+                                        {t('login.forgotPassword')}
                                     </Link>
                                 </Grid>
                                 <Grid item>
                                     <Link href="#" variant="body2">
-                                        {"Don't have an account? Sign Up"}
+                                        {t('login.signUp')}
                                     </Link>
                                 </Grid>
                             </Grid>
