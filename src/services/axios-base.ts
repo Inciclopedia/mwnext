@@ -10,6 +10,7 @@ const instance = axios.create({
 
 // Where you would set stuff like your 'Authorization' header, etc ...
 instance.defaults.headers = getHeaders();
+instance.defaults.withCredentials = true;
 
 // Add configure interceptors && all the other cool stuff
 instance.interceptors.response.use(

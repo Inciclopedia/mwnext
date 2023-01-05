@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '..';
+import {UserInfo} from "@/apis/auth";
 
 export interface IAuth {
   isAuthenticated?: boolean;
@@ -18,7 +19,7 @@ export const authSlice = createSlice({
     setAuthenticated: (state, action: PayloadAction<boolean>) => {
       state.isAuthenticated = action.payload;
     },
-    setCurrentUser: (state, action: PayloadAction<object>) => {
+    setCurrentUser: (state, action: PayloadAction<UserInfo>) => {
       state.currentUser = action.payload;
     },
   },

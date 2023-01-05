@@ -5,7 +5,8 @@
     "password": "Password",
     "rememberMe": "Remember me",
     "forgotPassword": "Forgot password?",
-    "signUp": "Don't have an account? Sign Up"
+    "signUp": "Don't have an account? Sign Up",
+    "failed": "Something went wrong. Please try again."
   },
   "es": {
     "signIn": "Iniciar sesión",
@@ -13,7 +14,8 @@
     "password": "Contraseña",
     "rememberMe": "Recordarme",
     "forgotPassword": "¿Olvidaste la contraseña?",
-    "signUp": "¿No tienes cuenta? ¡Crea una!"
+    "signUp": "¿No tienes cuenta? ¡Crea una!",
+    "failed": "Algo fue mal. Vuélvelo a intentar."
   },
   "ca": {
     "signIn": "Entreu",
@@ -21,6 +23,7 @@
     "password": "Clau",
     "rememberMe": "Recordeu-me",
     "forgotPassword": "Heu oblidat la clau?",
-    "signUp": "No teniu compte? Creeu-ne un!"
+    "signUp": "No teniu compte? Creeu-ne un!",
+    "failed":  "Quelcom ha anat malament. Torneu-ho a intentar."
   }
 }

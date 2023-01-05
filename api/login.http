@@ -1,0 +1,35 @@
+# Get login token
+GET http://{{endpoint}}?action=query&meta=tokens&type=login&format=json
+
+> {%
+    client.global.set("login_token", response.body.query.tokens.logintoken.replace("+", "%2B"));
+%}
+
+###
+# Simulate a preflight
+OPTIONS http://{{endpoint}}?action=query&meta=tokens&type=login&format=json
+Origin: *
+
+> {%
+    client.global.set("login_token", response.body.query.tokens.logintoken.replace("+", "%2B"));
+%}
+
+###
+# Perform login
+POST http://{{endpoint}}?action=clientlogin&username={{username}}&loginreturnurl={{callback}}&format=json
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+logintoken={{login_token}}&password={{password}}
+
+###
+# Fail login
+POST http://{{endpoint}}?action=clientlogin&username={{username}}&loginreturnurl={{callback}}&format=json
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+logintoken={{login_token}}&password=xaxa
+
+###
+# MFA response
+GET http://{{endpoint}}?action=clientlogin&logincontinue=1&OATHToken={{mfa_token}}&logintoken={{login_token}}

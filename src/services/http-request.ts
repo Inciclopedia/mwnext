@@ -1,5 +1,6 @@
 import AxiosRequest from './axios-base';
 import { AxiosInstance, AxiosRequestConfig } from 'axios';
+import qs from 'qs';
 
 class HttpRequest {
   baseRequest: AxiosInstance;
@@ -13,6 +14,16 @@ class HttpRequest {
 
   async post(url: string, data?: unknown, config?: AxiosRequestConfig) {
     return this.baseRequest.post(url, data, config);
+  }
+
+  async postUrlEncoded(url: string, data: string, config?: AxiosRequestConfig) {
+    return this.baseRequest.request({
+      ...config,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      data: data,
+      url
+  });
   }
 }
 

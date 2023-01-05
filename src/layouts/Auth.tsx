@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setAuthenticated, setCurrentUser } from '@/store/slices/authSlice';
-import { getCurrentUser } from '@/apis/auth';
+import {selectIsAuthenticated, setAuthenticated, setCurrentUser} from '@/store/slices/authSlice';
+import {getCurrentUser, UserInfoResponse} from '@/apis/auth';
 
 import { getToken } from '@/helpers/local-storage';
 import { goURL } from '@/helpers/router';
+import {AxiosResponse} from "axios";
 
 interface IProps {
   children: React.ReactElement;
@@ -16,22 +17,22 @@ const Auth: React.FC<IProps> = ({ children }) => {
 
   const fetchCurrentUser = useCallback(async () => {
     try {
-      const response = await getCurrentUser();
-      if (response && response.data) {
-        dispatch(setAuthenticated(true));
-        dispatch(setCurrentUser(response.data));
+      const response: AxiosResponse<UserInfoResponse> = await getCurrentUser();
+      if (response && response.data && response.data.query && response.data.query.userinfo && response.data.query.userinfo.id !== 0) {
+        window.localStorage.setItem("authenticated", "true");
+        window.localStorage.setItem("currentUser", JSON.stringify(response.data.query.userinfo));
+
+      } else {
+          goURL('/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search + window.location.hash));
       }
     } catch (error) {
-      goURL('/login');
+      goURL('/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search + window.location.hash));
     }
     setRenderRoute(true);
   }, [dispatch]);
 
   useEffect(() => {
-    if (!getToken()) {
-      goURL('/login');
-      setRenderRoute(true);
-    } else {
+    if (!window.localStorage.getItem("authenticated")) {
       fetchCurrentUser();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

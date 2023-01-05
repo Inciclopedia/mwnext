@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { useTranslation } from 'react-i18next';
 import { ITag } from './types';
 import HomeTag from './components/tag';
@@ -8,6 +8,8 @@ import i18n from '@/locales/i18n';
 import Banner from '@/static/images/banner.png';
 import ViIcon from '@/static/images/icon/vi.svg';
 import EnIcon from '@/static/images/icon/en.svg';
+import Auth from "@/layouts/Auth";
+import {getCurrentUser, UserInfo} from "@/apis/auth";
 
 const keywords: Array<ITag> = [
   { label: 'React.js' },
@@ -43,35 +45,18 @@ const languageOptions = [
 
 const Home: React.FC = () => {
   const { t } = useTranslation();
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    async function getUser() {
+      const u = await getCurrentUser();
+      setUser(u);
+    }
+    getUser();
+  });
   return (
-    <div className="row home">
-      <div className="container">
-        <img className="banner" src={Banner} />
-        <Select
-          defaultValue={i18n.language}
-          className="select-language"
-          onChange={option => {
-            i18n.changeLanguage(option.value);
-          }}
-          options={languageOptions}
-        />
-        <div className="title">{t('home.title')}</div>
-        <div>
-          <div className="keywords">
-            <i>
-              {t('home.keywords')}:
-              {keywords.map(key => (
-                <HomeTag color={key.color} label={key.label} key={key.label} />
-              ))}
-            </i>
-          </div>
-        </div>
-        <div className="aldenn">
-          {t('home.created_by')} 👻{'  '}
-          <a href="http://aldenn.vercel.app/">Aldenn</a>
-        </div>
-      </div>
-    </div>
+    <Auth>
+      <p>{user ? "Logged in as " + (user as UserInfo).name : "Not logged in"}</p>
+    </Auth>
   );
 };
 
