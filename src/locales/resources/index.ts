@@ -1,10 +1,11 @@
-import { Resource } from 'i18next';
+import {Resource} from 'i18next';
 import languages from '../languages';
 import home from './home.json';
 import footer from './footer.json';
 import login from './login.json';
 import logout from './logout.json';
 import wfMessages from './wfMessages.json';
+import appBar from './appBar.json';
 
 interface IResource {
   [key: string]: Resource;
@@ -16,6 +17,7 @@ const mergeResource: IResource = {
   login,
   logout,
   wfMessages,
+  appBar
 };
 
 export const langs = Object.keys(languages);

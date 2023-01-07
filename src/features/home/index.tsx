@@ -1,15 +1,9 @@
-import React, {useEffect, useState} from 'react';
-import { useTranslation } from 'react-i18next';
-import { ITag } from './types';
-import HomeTag from './components/tag';
-import Select from '@/components/select';
-import i18n from '@/locales/i18n';
-
-import Banner from '@/static/images/banner.png';
+import React from 'react';
+import {useTranslation} from 'react-i18next';
+import {ITag} from './types';
 import ViIcon from '@/static/images/icon/vi.svg';
 import EnIcon from '@/static/images/icon/en.svg';
-import Auth from "@/layouts/Auth";
-import {getCurrentUser, UserInfo} from "@/apis/auth";
+import useAccount from "@/hooks/useAccount";
 
 const keywords: Array<ITag> = [
   { label: 'React.js' },
@@ -45,11 +39,9 @@ const languageOptions = [
 
 const Home: React.FC = () => {
   const { t } = useTranslation();
-  const [user, setUser] = useState(window.localStorage.getItem("authenticated") && JSON.parse(window.localStorage.getItem("currentUser")));
+  const { account } = useAccount();
   return (
-    <Auth>
-      <p>{user ? "Logged in as " + (user as UserInfo).name : "Not logged in"}</p>
-    </Auth>
+      <p>{account !== null ? "Logged in as " + account.name : "Not logged in"}</p>
   );
 };
 

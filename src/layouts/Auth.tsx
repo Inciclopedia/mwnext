@@ -1,9 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import {selectIsAuthenticated, setAuthenticated, setCurrentUser} from '@/store/slices/authSlice';
+import React, {useCallback, useEffect, useState} from 'react';
 import {getCurrentUser, UserInfoResponse} from '@/apis/auth';
 
-import { goURL } from '@/helpers/router';
+import {goURL} from '@/helpers/router';
 import {AxiosResponse} from "axios";
 
 interface IProps {
@@ -19,6 +17,7 @@ const Auth: React.FC<IProps> = ({ children }) => {
     try {
       const response: AxiosResponse<UserInfoResponse> = await getCurrentUser();
       if (response && response.data && response.data.query && response.data.query.userinfo && response.data.query.userinfo.id !== 0) {
+        window.postMessage("authenticated", "*");
         window.localStorage.setItem("authenticated", "true");
         window.localStorage.setItem("currentUser", JSON.stringify(response.data.query.userinfo));
         setAuthenticated("true");
