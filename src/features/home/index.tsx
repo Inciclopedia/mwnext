@@ -46,13 +46,18 @@ const languageOptions = [
 const Home: React.FC = () => {
   const { t } = useTranslation();
   const [user, setUser] = useState(null);
+  const [loadingUser, setLoadingUser] = useState(false);
   useEffect(() => {
     async function getUser() {
       const u = await getCurrentUser();
       setUser(u);
+      setLoadingUser(false);
     }
-    getUser();
-  });
+    if (!user && !loadingUser) {
+      setLoadingUser(true);
+      getUser();
+    }
+  }, [user]);
   return (
     <Auth>
       <p>{user ? "Logged in as " + (user as UserInfo).name : "Not logged in"}</p>

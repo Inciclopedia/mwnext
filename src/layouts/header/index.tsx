@@ -12,11 +12,11 @@ interface IMenuItem {
 }
 
 export const HEADERS: Array<IMenuItem> = [
-  // {
-  //   name: '1',
-  //   href: '#',
-  //   label: 'Menu 1',
-  // },
+  {
+    name: '1',
+    href: '#',
+    label: 'Menu 1',
+  },
 ];
 
 const Header: React.FC = () => {
@@ -49,7 +49,7 @@ const Header: React.FC = () => {
                 </a>
               </li>
             ))}
-            <li>Version: {process.env.VERSION}</li>
+            <li>{JSON.parse(window.localStorage.getItem("currentUser")).name}</li>
             <li className="button-github">
               <a
                 style={{ display: 'flex', alignItems: 'center' }}
@@ -67,7 +67,7 @@ const Header: React.FC = () => {
           className="btn-menu-mobile"
           href="#"
         >
-          <span></span>
+          <span>{JSON.parse(window.localStorage.getItem("currentUser")).name}</span>
           <span></span>
           <span></span>
         </a>

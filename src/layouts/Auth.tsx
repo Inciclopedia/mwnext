@@ -13,7 +13,8 @@ interface IProps {
 
 const Auth: React.FC<IProps> = ({ children }) => {
   const [renderRoute, setRenderRoute] = useState(false);
-  const dispatch = useDispatch();
+  const [authenticated, setAuthenticated] = useState(window.localStorage.getItem("authenticated"));
+  const [authenticating, setAuthenticating] = useState(false);
 
   const fetchCurrentUser = useCallback(async () => {
     try {
@@ -21,22 +22,28 @@ const Auth: React.FC<IProps> = ({ children }) => {
       if (response && response.data && response.data.query && response.data.query.userinfo && response.data.query.userinfo.id !== 0) {
         window.localStorage.setItem("authenticated", "true");
         window.localStorage.setItem("currentUser", JSON.stringify(response.data.query.userinfo));
-
+        setAuthenticated("true");
+        setAuthenticating(false);
       } else {
-          goURL('/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search + window.location.hash));
+        setAuthenticated("false");
+        setAuthenticating(false);
+        goURL('/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search + window.location.hash));
       }
     } catch (error) {
+      setAuthenticated("false");
+      setAuthenticating(false);
       goURL('/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search + window.location.hash));
     }
     setRenderRoute(true);
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
-    if (!window.localStorage.getItem("authenticated")) {
+    if (!authenticated && !authenticating) {
+      setAuthenticating(true);
       fetchCurrentUser();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [authenticated]);
 
   return renderRoute ? children : null;
 };
