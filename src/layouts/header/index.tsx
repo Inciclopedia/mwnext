@@ -49,7 +49,7 @@ const Header: React.FC = () => {
                 </a>
               </li>
             ))}
-            <li>{JSON.parse(window.localStorage.getItem("currentUser")).name}</li>
+            <li><a href="/logout">{window.localStorage.getItem("authenticated") && JSON.parse(window.localStorage.getItem("currentUser")).name}</a></li>
             <li className="button-github">
               <a
                 style={{ display: 'flex', alignItems: 'center' }}
@@ -67,7 +67,7 @@ const Header: React.FC = () => {
           className="btn-menu-mobile"
           href="#"
         >
-          <span>{JSON.parse(window.localStorage.getItem("currentUser")).name}</span>
+          <span>{window.localStorage.getItem("authenticated") && JSON.parse(window.localStorage.getItem("currentUser")).name}</span>
           <span></span>
           <span></span>
         </a>

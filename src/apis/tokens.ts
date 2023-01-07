@@ -5,12 +5,16 @@ export interface LoginToken {
     logintoken: string;
 }
 
-export interface LoginTokenResponse {
-    batchcomplete: string;
-    query: {tokens: LoginToken};
+export interface CsrfToken {
+    csrftoken: string;
 }
 
-export const getLoginToken = async (): Promise<AxiosResponse<LoginTokenResponse>> =>
+export interface TokenResponse<T> {
+    batchcomplete: string;
+    query: {tokens: T};
+}
+
+export const getLoginToken = async (): Promise<AxiosResponse<TokenResponse<LoginToken>>> =>
   HttpRequest.get('/api.php', {
       params: {
           "action": "query",
@@ -19,3 +23,13 @@ export const getLoginToken = async (): Promise<AxiosResponse<LoginTokenResponse>
           "format": "json"
       }
   });
+
+export const getCsrfToken = async (): Promise<AxiosResponse<TokenResponse<CsrfToken>>> =>
+    HttpRequest.get('/api.php', {
+        params: {
+            "action": "query",
+            "meta": "tokens",
+            "type": "csrf",
+            "format": "json"
+        }
+    });

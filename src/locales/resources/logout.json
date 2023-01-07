@@ -1,0 +1,14 @@
+{
+  "en": {
+    "inProgress": "Please wait while we sign you out",
+    "failed": "Something went wrong and we couldn't log you out. Please clear your browser cookies."
+  },
+  "es": {
+    "inProgress": "Espera mientras cerramos tu sesión",
+    "failed": "Algo fue mal y no pudimos cerrar la sesión, por favor borra las cookies de tu navegador."
+  },
+  "ca": {
+    "inProgress": "Espereu mentre sortim",
+    "failed": "Quelcom ha fallat i no hem pogut tancar la sessió, si us plau esborreu les galetes del vostre navegador."
+  }
+}

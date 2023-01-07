@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 import {selectIsAuthenticated, setAuthenticated, setCurrentUser} from '@/store/slices/authSlice';
 import {getCurrentUser, UserInfoResponse} from '@/apis/auth';
 
-import { getToken } from '@/helpers/local-storage';
 import { goURL } from '@/helpers/router';
 import {AxiosResponse} from "axios";
 

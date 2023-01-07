@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 
 const Login = lazy(() => import('./components/login/index'));
+const Logout = lazy(() => import('./components/logout/index'));
 
 export default [
   {
@@ -13,4 +14,14 @@ export default [
     },
     component: Login,
   },
+  {
+    name: 'logout',
+    path: '/logout',
+    exact: true,
+    layout: {
+      header: false,
+      footer: false,
+    },
+    component: Logout
+  }
 ];

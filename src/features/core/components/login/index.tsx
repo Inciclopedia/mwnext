@@ -17,9 +17,6 @@ import {useTranslation} from "react-i18next";
 import {useState} from "react";
 import {getCurrentUser, performLogin, UserInfoResponse} from "@/apis/auth";
 import {goURL} from "@/helpers/router";
-import {AxiosResponse} from "axios";
-import {setAuthenticated, setCurrentUser} from "@/store/slices/authSlice";
-import {useDispatch} from "react-redux";
 
 function Copyright(props: any) {
     return (
@@ -37,33 +34,46 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function Login() {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const landing = useImage("landing.jpg");
     const logo = useImage("logo.png");
     const [errorMessage, setErrorMessage] = useState(null);
-    const dispatch = useDispatch();
+    const [errorField, setErrorField] = useState(null);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
+        const username = data.get('username').toString();
+        const password = data.get('password').toString();
+        if (!username) {
+            setErrorMessage(t("wfMessages.noname"));
+            setErrorField("username");
+            return;
+        }
+        if (!password) {
+            setErrorMessage(t("wfMessages.wrongpasswordempty"));
+            setErrorField("password");
+            return;
+        }
         performLogin(data.get('username').toString(), data.get('password').toString()).then((result) => {
             if (result.clientlogin.status == "PASS") {
                 getCurrentUser().then((response) => {
                     if (response && response.data && response.data.query && response.data.query.userinfo && response.data.query.userinfo.id !== 0) {
-                        dispatch(setAuthenticated(true));
-                        dispatch(setCurrentUser(response.data.query.userinfo));
                         const params = new URLSearchParams(window.location.search);
                         goURL(params.get("redirect") ? decodeURIComponent(params.get("redirect")) : "/");
                     }
                 }).catch((error) => {
                     setErrorMessage(t("login.failed"));
+                    setErrorField("password");
                 })
 
             } else {
-                setErrorMessage(result.clientlogin.message || t("login.failed"));
+                setErrorMessage(i18n.exists("wfMessages." + result.clientlogin.messagecode) ? t("wfMessages." + result.clientlogin.messagecode) : t("login.failed"));
+                setErrorField("password");
             }
         }).catch((error) => {
             setErrorMessage(error.toString());
+            setErrorField("password");
         })
     };
 
@@ -113,6 +123,8 @@ export default function Login() {
                                 name="username"
                                 autoComplete="username"
                                 autoFocus
+                                error={errorMessage !== null}
+                                helperText={errorField == "username" && errorMessage}
                             />
                             <TextField
                                 margin="normal"
@@ -124,7 +136,7 @@ export default function Login() {
                                 id="password"
                                 autoComplete="current-password"
                                 error={errorMessage !== null}
-                                helperText={errorMessage}
+                                helperText={errorField == "password" && errorMessage}
                             />
                             <FormControlLabel
                                 control={<Checkbox value="remember" color="primary" />}

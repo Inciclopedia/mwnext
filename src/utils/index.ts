@@ -1,4 +1,3 @@
-import { getToken } from '@/helpers/local-storage';
 import { isEqual } from 'lodash';
 
 export const compareTwoObject = (
@@ -53,10 +52,6 @@ export const isPromise = (func: Promise<unknown>): boolean =>
 export const getHeaders = (options: object = {}): object =>
   Object.assign(
     {},
-    {
-      Authorization: `Bearer ${getToken()}`,
-      'Content-Type': 'application/json',
-    },
     options,
   );
 

@@ -33,3 +33,19 @@ logintoken={{login_token}}&password=xaxa
 ###
 # MFA response
 GET http://{{endpoint}}?action=clientlogin&logincontinue=1&OATHToken={{mfa_token}}&logintoken={{login_token}}
+
+###
+# Get csrf token
+GET http://{{endpoint}}?action=query&meta=tokens&type=csrf&format=json
+
+> {%
+    client.global.set("csrf_token", response.body.query.tokens.csrftoken.replace("+", "%2B"));
+%}
+
+###
+# Logout
+POST http://{{endpoint}}?action=logout&format=json
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+token={{csrf_token}}

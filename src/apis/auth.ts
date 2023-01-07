@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import HttpRequest from '@/services/http-request';
-import {getLoginToken} from "@/apis/tokens";
+import {getCsrfToken, getLoginToken} from "@/apis/tokens";
 import {setAuthenticated, setCurrentUser} from "@/store/slices/authSlice";
 
 export interface UserInfo {
@@ -33,7 +33,7 @@ export const getCurrentUser = async (): Promise<AxiosResponse<UserInfoResponse>>
   });
 
 
-export const clientLogin = async (username: string, password: string, loginToken: string, callback: string): Promise<AxiosResponse<ClientLoginResponse>> => {
+const clientLogin = async (username: string, password: string, loginToken: string, callback: string): Promise<AxiosResponse<ClientLoginResponse>> => {
     const urlParams = new URLSearchParams();
     urlParams.append("action", "clientlogin");
     urlParams.append("username", username);
@@ -55,4 +55,29 @@ export const performLogin = async (username: string, password: string): Promise<
         return Promise.reject("Hubo un problema iniciando sesión, por favor inténtalo de nuevo");
     }
     return loginResponse.data;
+}
+
+const logout = async (csrfToken: string): Promise<AxiosResponse<{}>> => {
+    const urlParams = new URLSearchParams();
+    urlParams.append("action", "logout");
+    urlParams.append("format", "json");
+    const bodyParams = "token=" + encodeURIComponent(csrfToken);
+    return HttpRequest.postUrlEncoded('/api.php?' + urlParams.toString(), bodyParams);
+}
+
+export const performLogout = async (): Promise<void> => {
+    const tokenResponse = await getCsrfToken();
+    if (!tokenResponse || !tokenResponse.data || !tokenResponse.data.query || !tokenResponse.data.query.tokens || !tokenResponse.data.query.tokens.csrftoken) {
+        return Promise.reject("Hubo un problema interno, por favor inténtalo de nuevo");
+    }
+    const token = tokenResponse.data.query.tokens.csrftoken;
+    // TODO: set proper callback URI and MFA flow. We don't use it in uncy so it's fine for now...
+    const response = await logout(token);
+    if (!response || response.status >= 400) {
+        return Promise.reject("Hubo un problema cerrando sesión, por favor inténtalo de nuevo");
+    }
+    window.localStorage.removeItem("authenticated");
+    window.localStorage.removeItem("currentUser");
+
+    return Promise.resolve();
 }
