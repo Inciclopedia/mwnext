@@ -1,6 +1,6 @@
 import React from 'react';
 import {Route, Switch} from 'react-router-dom';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import routes from '@/router';
 import {compareTwoObject} from '@/utils';
 import {ILayout, selectDisplayLayout, setDisplayLayout,} from '@/store/slices/layoutSlice';
@@ -19,12 +19,13 @@ const Main: React.FC = () => {
       setTimeout(() => dispatch(setDisplayLayout(layoutUpdated)));
     }
   };
+  const { header } = useSelector(selectDisplayLayout);
 
   return (
     <div id="main" style={{
-      height: "calc(100%-72px)",
+      height: header ? "calc(100%-72px)" : "100%",
       overflow: "hidden",
-      paddingTop: "72px"
+      paddingTop: header ? "72px" : 0
     }}>
       <Switch>
         {routes.map(

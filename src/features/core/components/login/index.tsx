@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
+import {useState} from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -9,13 +9,11 @@ import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {createTheme, ThemeProvider} from '@mui/material/styles';
 import useImage from "@/hooks/useImage";
 import {useTranslation} from "react-i18next";
-import {useState} from "react";
-import {getCurrentUser, performLogin, UserInfoResponse} from "@/apis/auth";
+import {getCurrentUser, performLogin} from "@/apis/auth";
 import {goURL} from "@/helpers/router";
 
 function Copyright(props: any) {
@@ -109,7 +107,7 @@ export default function Login() {
                             alignItems: 'center',
                         }}
                     >
-                        <img src={logo.image} alt={process.env.REACT_APP_NAME} style={{width: '150px', height: 'auto'}} />
+                        <a href="/"><img src={logo.image} alt={process.env.REACT_APP_NAME} style={{width: '150px', height: 'auto'}} /></a>
                         <Typography component="h1" variant="h5">
                             {t('login.signIn')}
                         </Typography>

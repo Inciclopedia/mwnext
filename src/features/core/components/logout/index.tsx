@@ -75,7 +75,7 @@ export default function Logout() {
                         alignItems: 'center',
                     }}
                 >
-                    <img src={logo.image} alt={process.env.REACT_APP_NAME} style={{width: '150px', height: 'auto'}} />
+                    <a href="/"><img src={logo.image} alt={process.env.REACT_APP_NAME} style={{width: '150px', height: 'auto'}} /></a>
                     <Typography component="h1" variant="h5">
                         {logoutFailed ? t('logout.failed') : t('logout.inProgress')}
                     </Typography>

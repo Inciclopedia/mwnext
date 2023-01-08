@@ -21,7 +21,7 @@ import useAccount from "@/hooks/useAccount";
 import {goURL} from "@/helpers/router";
 import useFile from "@/hooks/useFile";
 import Button from "@mui/material/Button";
-import {Autocomplete, autocompleteClasses} from "@mui/material";
+import {Autocomplete, autocompleteClasses, useMediaQuery} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {autocomplete, AutocompleteResult} from "@/apis/autocomplete";
 
@@ -72,7 +72,7 @@ export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (
     const [title, setTitle] = useState(process.env.REACT_APP_NAME);
     useEffect(() => {
         window.addEventListener('message', (ev: MessageEvent) => {
-            if (ev.data.startsWith("title ")) {
+            if (ev && ev.data && ev.data.startsWith("title ")) {
                 document.title = ev.data.replace("title ", "");
                 setTitle(document.title);
                 document.title = document.title ? document.title + " - " + process.env.REACT_APP_NAME : process.env.REACT_APP_NAME;
@@ -83,6 +83,7 @@ export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
 
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const { t } = useTranslation();
@@ -93,6 +94,7 @@ export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (
     const [search, setSearch ] = useState("");
     const [autocompleteText, setAutocompleteText] = useState(t("appBar.loading"));
     const loading = open && search.length > 3 && options.length === 0;
+    const [searchMobile, setSearchMobile] = useState(false);
 
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -183,7 +185,7 @@ export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="fixed" color="inherit" sx={{ zIndex: (theme) => theme.zIndex.drawer }}>
                 <Toolbar>
-                    <IconButton
+                    {isMobile && <IconButton
                         size="large"
                         edge="start"
                         color="inherit"
@@ -192,8 +194,8 @@ export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (
                         onClick={() => setDrawerOpen(!drawerOpen)}
                     >
                         <MenuIcon />
-                    </IconButton>
-                    <a href="/" title={process.env.REACT_APP_NAME}>
+                    </IconButton>}
+                    {!isMobile && <a href="/" title={process.env.REACT_APP_NAME}>
                     {file !== null && <img src={file} alt={process.env.REACT_APP_NAME} style={{width: 'auto', height: '64px', margin: "5px"}} />}
                     {file === null && <Typography
                         variant="h6"
@@ -203,20 +205,21 @@ export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (
                     >
                         {process.env.REACT_APP_NAME}
                     </Typography>}
-                    </a>
-                    <Typography
+                    </a>}
+                    {!searchMobile && <Typography
                         variant="h5"
                         noWrap
                         component="div"
                         sx={{marginLeft: '5px'}}
                     >
                         {title}
-                    </Typography>
-                    <Box sx={{ flexGrow: 1 }} />
+                    </Typography>}
+                    {(!isMobile || !searchMobile) && <Box sx={{ flexGrow: 1 }} />}
+                    {(!isMobile || searchMobile) &&
                     <Search>
                         <Autocomplete
                             disablePortal
-                            id="combo-box-demo"
+                            id="searchBox"
                             open={open}
                             onOpen={() => {
                                 setOpen(true);
@@ -248,7 +251,9 @@ export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (
                                     transform: "none"
                                 }}}
                             popupIcon={<SearchIcon/>}
-                            renderInput={(params) => <TextField variant="standard" {...params} placeholder={t('appBar.search')} sx={{
+                             renderInput={(params) => <TextField
+                                inputRef={input => input && searchMobile && input.focus()}
+                                variant="standard" {...params} placeholder={t('appBar.search')} sx={{
                                 padding: theme.spacing(1, 1, 1, 0),
                                 transition: theme.transitions.create('width'),
                                 minWidth: "100px"
@@ -259,8 +264,8 @@ export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (
                             }}/>}
                         />
 
-                    </Search>
-                    <Box sx={{ flexGrow: 1 }} />
+                    </Search>}
+                    {(!isMobile || !searchMobile) && <Box sx={{ flexGrow: 1 }} />}
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                         {account !== null && <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                             <Badge badgeContent={4} color="error">
@@ -308,6 +313,10 @@ export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (
                         </Button>}
                     </Box>
                     <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                        {isMobile && <IconButton color={searchMobile ? "primary" : "inherit"} onClick={() => {
+                            setSearchMobile(!searchMobile);
+
+                        }}><SearchIcon /></IconButton>}
                         <IconButton
                             size="large"
                             aria-label="show more"

@@ -26,11 +26,11 @@ interface IMenuItem {
 
 export const MENUS: Array<Array<IMenuItem>> = [
   [{
-    name: 'Home',
+    name: 'Portada',
     href: '/',
     icon: <HomeIcon />,
   },{
-    name: 'Recent Changes',
+    name: 'Cambios recientes',
     href: '/wiki/Special:RecentChanges',
     icon: <UpdateIcon />,
   }]
@@ -65,7 +65,9 @@ const Header: React.FC = () => {
               {index != 0 && <Divider/>}
               {menu.map((menuitem, idx) => (
                 <ListItem key={menuitem.name} disablePadding>
-                  <ListItemButton  component="a" href={menuitem.href}>
+                  <ListItemButton  component="a" href={menuitem.href} sx={{
+                    "&:visited": {color:0}
+                  }}>
                     {menuitem.icon && <ListItemIcon>
                       {menuitem.icon}
                     </ListItemIcon>}
