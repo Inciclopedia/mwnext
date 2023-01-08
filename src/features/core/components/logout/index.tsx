@@ -8,15 +8,10 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import {useTranslation} from "react-i18next";
 import useImage from "@/hooks/useImage";
-import {useDispatch} from "react-redux";
 
 
 function Copyright(props: any) {
@@ -43,7 +38,7 @@ export default function Logout() {
 
     useEffect(() => {
         performLogout().then(() => {
-            goURL('/login');
+            goURL('/');
         }).catch(() => {
             setLogoutFailed(true);
         })
@@ -80,7 +75,7 @@ export default function Logout() {
                         alignItems: 'center',
                     }}
                 >
-                    <img src={logo.image} alt={process.env.REACT_APP_NAME} style={{width: '150px', height: 'auto'}} />
+                    <a href="/"><img src={logo.image} alt={process.env.REACT_APP_NAME} style={{width: '150px', height: 'auto'}} /></a>
                     <Typography component="h1" variant="h5">
                         {logoutFailed ? t('logout.failed') : t('logout.inProgress')}
                     </Typography>
