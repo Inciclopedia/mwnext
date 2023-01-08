@@ -14,5 +14,10 @@ export default [
     name: 'article',
     path: '/wiki/:article',
     component: ArticleView,
+  },
+  {
+    name: 'index',
+    path: '/w/index.php',
+    Component: ArticleView
   }
 ];

@@ -67,7 +67,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const theme = createTheme();
 
-export default function MainAppBar() {
+export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (value: boolean) => void}) {
+    const {drawerOpen, setDrawerOpen} = props;
     const [title, setTitle] = useState(process.env.REACT_APP_NAME);
     useEffect(() => {
         window.addEventListener('message', (ev: MessageEvent) => {
@@ -180,7 +181,7 @@ export default function MainAppBar() {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="fixed" color="inherit">
+            <AppBar position="fixed" color="inherit" sx={{ zIndex: (theme) => theme.zIndex.drawer }}>
                 <Toolbar>
                     <IconButton
                         size="large"
@@ -188,11 +189,12 @@ export default function MainAppBar() {
                         color="inherit"
                         aria-label="open drawer"
                         sx={{ mr: 2 }}
+                        onClick={() => setDrawerOpen(!drawerOpen)}
                     >
                         <MenuIcon />
                     </IconButton>
                     <a href="/" title={process.env.REACT_APP_NAME}>
-                    {file !== null && <img src={file} alt={process.env.REACT_APP_NAME} style={{width: '64px', height: 'auto', margin: "5px"}} />}
+                    {file !== null && <img src={file} alt={process.env.REACT_APP_NAME} style={{width: 'auto', height: '64px', margin: "5px"}} />}
                     {file === null && <Typography
                         variant="h6"
                         noWrap

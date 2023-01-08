@@ -23,7 +23,7 @@ const Main: React.FC = () => {
   return (
     <div id="main" style={{
       height: "calc(100%-72px)",
-      overflow: "auto",
+      overflow: "hidden",
       paddingTop: "72px"
     }}>
       <Switch>
