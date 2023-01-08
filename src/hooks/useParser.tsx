@@ -16,7 +16,7 @@ const useParser = (params: ParserArguments) => {
         }).catch((error) => {
             setError({code: "clientexception", info: error.message});
         })
-    }, []);
+    }, [params.page, params.title, params.text]);
     return { parsed, error };
 }
 

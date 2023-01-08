@@ -1,5 +1,6 @@
 import * as React from 'react';
-import {alpha, styled} from '@mui/material/styles';
+import {KeyboardEvent, useEffect, useState} from 'react';
+import {alpha, createTheme, styled} from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -20,6 +21,9 @@ import useAccount from "@/hooks/useAccount";
 import {goURL} from "@/helpers/router";
 import useFile from "@/hooks/useFile";
 import Button from "@mui/material/Button";
+import {Autocomplete, autocompleteClasses} from "@mui/material";
+import TextField from "@mui/material/TextField";
+import {autocomplete, AutocompleteResult} from "@/apis/autocomplete";
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -30,7 +34,7 @@ const Search = styled('div')(({ theme }) => ({
     },
     marginRight: theme.spacing(2),
     marginLeft: 0,
-    width: '100%',
+    flexGrow: 1,
     [theme.breakpoints.up('sm')]: {
         marginLeft: theme.spacing(3),
         width: 'auto',
@@ -61,7 +65,19 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
+const theme = createTheme();
+
 export default function MainAppBar() {
+    const [title, setTitle] = useState(process.env.REACT_APP_NAME);
+    useEffect(() => {
+        window.addEventListener('message', (ev: MessageEvent) => {
+            if (ev.data.startsWith("title ")) {
+                document.title = ev.data.replace("title ", "");
+                setTitle(document.title);
+                document.title = document.title ? document.title + " - " + process.env.REACT_APP_NAME : process.env.REACT_APP_NAME;
+            }
+        });
+    }, []);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
@@ -71,6 +87,11 @@ export default function MainAppBar() {
     const { t } = useTranslation();
     const { account } = useAccount();
     const { file, error } = useFile("File:Wiki.png");
+    const [open, setOpen] = React.useState(false);
+    const [options, setOptions] = React.useState<readonly AutocompleteResult[]>([]);
+    const [search, setSearch ] = useState("");
+    const [autocompleteText, setAutocompleteText] = useState(t("appBar.loading"));
+    const loading = open && search.length > 3 && options.length === 0;
 
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -120,44 +141,46 @@ export default function MainAppBar() {
             open={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
         >
-            <MenuItem>
-                <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                    <Badge badgeContent={4} color="error">
-                        <MailIcon />
-                    </Badge>
-                </IconButton>
-                <p>Messages</p>
-            </MenuItem>
-            <MenuItem>
-                <IconButton
-                    size="large"
-                    aria-label="show 17 new notifications"
-                    color="inherit"
-                >
-                    <Badge badgeContent={17} color="error">
-                        <NotificationsIcon />
-                    </Badge>
-                </IconButton>
-                <p>Notifications</p>
-            </MenuItem>
-            <MenuItem onClick={handleProfileMenuOpen}>
-                <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="primary-search-account-menu"
-                    aria-haspopup="true"
-                    color="inherit"
-                >
-                    <AccountCircle />
-                </IconButton>
-                <p>Profile</p>
-            </MenuItem>
+            {account && <>
+                <MenuItem onClick={handleMenuClose}>{account.name}</MenuItem>
+                <MenuItem onClick={handleMenuClose}>{t('appBar.userTalk')}</MenuItem>
+                <MenuItem onClick={handleMenuClose}>{t('appBar.userPreferences')}</MenuItem>
+                <MenuItem onClick={() => goURL('/logout')}>{t('appBar.logout')}</MenuItem>
+            </>}
+            {!account && <>
+                <MenuItem onClick={handleMenuClose}>{t('appBar.createAccount')}</MenuItem>
+                <MenuItem onClick={() => goURL('/login')}>{t('appBar.login')}</MenuItem>
+            </>}
         </Menu>
     );
 
+    let throttle: ReturnType<typeof setTimeout> = null;
+
+    useEffect(() =>  {
+        setAutocompleteText(t("appBar.loading"));
+        if (throttle !== null) {
+            clearTimeout(throttle);
+            throttle = null;
+        }
+        if (search != "" && search.length > 3) {
+            throttle = setTimeout(() => {
+                setOptions([]);
+                autocomplete(search, 10).then((results) => {
+                    if (results.length === 0) {
+                        setAutocompleteText(t("appBar.noResults"));
+                    }
+                    setOptions(results);
+                }).catch(() => {
+                    setOptions([]);
+                })
+            }, 500);
+        }
+    }, [search])
+
+
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static" color="transparent">
+            <AppBar position="fixed" color="inherit">
                 <Toolbar>
                     <IconButton
                         size="large"
@@ -168,7 +191,8 @@ export default function MainAppBar() {
                     >
                         <MenuIcon />
                     </IconButton>
-                    {file !== null && <img src={file} alt={process.env.REACT_APP_NAME} style={{width: '96px', height: 'auto'}} />}
+                    <a href="/" title={process.env.REACT_APP_NAME}>
+                    {file !== null && <img src={file} alt={process.env.REACT_APP_NAME} style={{width: '64px', height: 'auto', margin: "5px"}} />}
                     {file === null && <Typography
                         variant="h6"
                         noWrap
@@ -177,15 +201,62 @@ export default function MainAppBar() {
                     >
                         {process.env.REACT_APP_NAME}
                     </Typography>}
+                    </a>
+                    <Typography
+                        variant="h5"
+                        noWrap
+                        component="div"
+                        sx={{marginLeft: '5px'}}
+                    >
+                        {title}
+                    </Typography>
                     <Box sx={{ flexGrow: 1 }} />
                     <Search>
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder={t("appBar.search")}
-                            inputProps={{ 'aria-label': 'search' }}
+                        <Autocomplete
+                            disablePortal
+                            id="combo-box-demo"
+                            open={open}
+                            onOpen={() => {
+                                setOpen(true);
+                            }}
+                            onClose={() => {
+                                setOpen(false);
+                            }}
+                            isOptionEqualToValue={(option: AutocompleteResult, value: AutocompleteResult | string) => (option == value || (option as AutocompleteResult).page === (value as AutocompleteResult).page)}
+                            getOptionLabel={(option: string) => ((option as AutocompleteResult).page || option)}
+                            options={options}
+                            loading={loading}
+                            loadingText={<>{autocompleteText}</>}
+                            freeSolo
+                            onInputChange={(event: React.SyntheticEvent, value: string, reason: string) => {
+                                if (!value) {
+                                    setSearch("");
+                                } else {
+                                    setSearch(value);
+                                }
+                            }}
+                            onChange={(event: React.SyntheticEvent, value: AutocompleteResult | string) => {
+                                if ((value as AutocompleteResult).page) {
+                                    goURL("/wiki/" + (value as AutocompleteResult).page);
+                                } else {
+                                    goURL("/wiki/" + value);
+                                }
+                            }}
+                            sx={{ minWidth: "100px", [`& .${autocompleteClasses.popupIndicator}`]: {
+                                    transform: "none"
+                                }}}
+                            popupIcon={<SearchIcon/>}
+                            renderInput={(params) => <TextField variant="standard" {...params} placeholder={t('appBar.search')} sx={{
+                                padding: theme.spacing(1, 1, 1, 0),
+                                transition: theme.transitions.create('width'),
+                                minWidth: "100px"
+                            }} onKeyDown={(event: KeyboardEvent) => {
+                                if (event.code === "Enter" || event.code === "NumpadEnter")  {
+                                    goURL("/wiki/" + search);
+                                }
+                            }}/>}
                         />
+
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>

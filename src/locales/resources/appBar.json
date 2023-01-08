@@ -5,7 +5,9 @@
     "userPreferences": "My preferences",
     "logout": "Sign out",
     "createAccount": "Create an account",
-    "login": "Sign in"
+    "login": "Sign in",
+    "loading": "Loading results...",
+    "noResults": "Nothing found"
   },
   "es": {
     "search": "Buscar...",
@@ -13,7 +15,9 @@
     "userPreferences": "Mis preferencias",
     "logout": "Salir",
     "createAccount": "Crear una cuenta",
-    "login": "Acceder"
+    "login": "Acceder",
+    "loading": "Cargando resultados...",
+    "noResults": "Sin resultados"
   },
   "ca": {
     "search": "Cerca...",
@@ -21,6 +25,8 @@
     "userPreferences": "Preferències",
     "logout": "Surt",
     "createAccount": "Crear un compte",
-    "login": "Accediu"
+    "login": "Accediu",
+    "loading": "Cercant resultats...",
+    "noResults": "No s'ha trobat res"
   }
 }

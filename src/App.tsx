@@ -28,7 +28,7 @@ const theme = createTheme();
 const ReactApp: React.FC = () => {
   return (
     <Router>
-      <Helmet titleTemplate={"%s - " + process.env.REACT_APP_NAME} defaultTitle={process.env.REACT_APP_NAME}>
+      <Helmet>
         <meta name="description" content="Alternative client for MediaWiki" />
       </Helmet>
       <CssBaseline/>

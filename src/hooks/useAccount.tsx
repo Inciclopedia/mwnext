@@ -5,7 +5,7 @@ const useAccount = () => {
 
     useEffect(() => {
         if (!window.localStorage.getItem("authenticated")) {
-            window.onmessage = (( ev: MessageEvent) => {
+            window.addEventListener('message', ( ev: MessageEvent) => {
                 if (ev.data === "authenticated") {
                     setAccount(JSON.parse(window.localStorage.getItem("currentUser")));
                 }

@@ -60,6 +60,7 @@ export interface ParserArguments {
     templatesandboxtext?: string;
     templatesandboxcontentmodel?: string;
     templatesandboxcontentformat?: string;
+    mwnextHideTitle?: boolean;
 }
 
 export interface ParserText {

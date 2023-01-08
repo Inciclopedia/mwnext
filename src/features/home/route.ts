@@ -12,7 +12,7 @@ export default [
   },
   {
     name: 'article',
-    path: '/wiki/',
+    path: '/wiki/:article',
     component: ArticleView,
   }
 ];

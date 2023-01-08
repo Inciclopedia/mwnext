@@ -1,7 +1,6 @@
-import React, { Fragment } from 'react';
+import React, {Fragment} from 'react';
 
 import Header from './header';
-import Footer from './footer';
 import Main from './main';
 
 const Layout: React.FC = () => {
@@ -9,7 +8,6 @@ const Layout: React.FC = () => {
     <Fragment>
       <Header />
       <Main />
-      <Footer />
     </Fragment>
   );
 };

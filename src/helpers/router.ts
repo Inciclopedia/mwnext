@@ -1,8 +1,9 @@
-import { isEmptyObject } from '@/utils';
-import { history } from '@/store';
+import {isEmptyObject} from '@/utils';
+import {history} from '@/store';
 
 export const goURL = (path = '/', state?: unknown): void => {
   history.push(path, state);
+  window.postMessage("url");
 };
 
 export const replaceURL = (path = '/', state?: unknown): void => {

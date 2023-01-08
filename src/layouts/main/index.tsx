@@ -1,14 +1,10 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import {Route, Switch} from 'react-router-dom';
+import {useDispatch} from 'react-redux';
 import routes from '@/router';
-import { compareTwoObject } from '@/utils';
-import {
-  ILayout,
-  selectDisplayLayout,
-  setDisplayLayout,
-} from '@/store/slices/layoutSlice';
-import { useShallowEqualSelector } from '@/hooks/useShallowEqualSelector';
+import {compareTwoObject} from '@/utils';
+import {ILayout, selectDisplayLayout, setDisplayLayout,} from '@/store/slices/layoutSlice';
+import {useShallowEqualSelector} from '@/hooks/useShallowEqualSelector';
 
 const Main: React.FC = () => {
   const layout: ILayout = useShallowEqualSelector(selectDisplayLayout);
@@ -25,7 +21,11 @@ const Main: React.FC = () => {
   };
 
   return (
-    <div id="main">
+    <div id="main" style={{
+      height: "calc(100%-72px)",
+      overflow: "auto",
+      paddingTop: "72px"
+    }}>
       <Switch>
         {routes.map(
           ({

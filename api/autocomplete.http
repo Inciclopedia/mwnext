@@ -1,0 +1,2 @@
+# Get autocomplete results
+GET http://{{endpoint}}?action=opensearch&search=portada chi&limit=10&format=json&profile=fuzzy-subphrases
