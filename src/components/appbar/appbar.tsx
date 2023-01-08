@@ -18,6 +18,8 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import {useTranslation} from "react-i18next";
 import useAccount from "@/hooks/useAccount";
 import {goURL} from "@/helpers/router";
+import useFile from "@/hooks/useFile";
+import Button from "@mui/material/Button";
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -68,6 +70,7 @@ export default function MainAppBar() {
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const { t } = useTranslation();
     const { account } = useAccount();
+    const { file, error } = useFile("File:Wiki.png");
 
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -90,16 +93,8 @@ export default function MainAppBar() {
     const renderMenu = (
         <Menu
             anchorEl={anchorEl}
-            anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
             id={menuId}
             keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
@@ -120,16 +115,8 @@ export default function MainAppBar() {
     const renderMobileMenu = (
         <Menu
             anchorEl={mobileMoreAnchorEl}
-            anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
             id={mobileMenuId}
             keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
             open={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
         >
@@ -170,7 +157,7 @@ export default function MainAppBar() {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static">
+            <AppBar position="static" color="transparent">
                 <Toolbar>
                     <IconButton
                         size="large"
@@ -181,14 +168,16 @@ export default function MainAppBar() {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography
+                    {file !== null && <img src={file} alt={process.env.REACT_APP_NAME} style={{width: '96px', height: 'auto'}} />}
+                    {file === null && <Typography
                         variant="h6"
                         noWrap
                         component="div"
                         sx={{ display: { xs: 'none', sm: 'block' } }}
                     >
                         {process.env.REACT_APP_NAME}
-                    </Typography>
+                    </Typography>}
+                    <Box sx={{ flexGrow: 1 }} />
                     <Search>
                         <SearchIconWrapper>
                             <SearchIcon />
@@ -200,12 +189,12 @@ export default function MainAppBar() {
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                        {account !== null && <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                             <Badge badgeContent={4} color="error">
                                 <MailIcon />
                             </Badge>
-                        </IconButton>
-                        <IconButton
+                        </IconButton>}
+                        {account !== null && <IconButton
                             size="large"
                             aria-label="show 17 new notifications"
                             color="inherit"
@@ -213,8 +202,9 @@ export default function MainAppBar() {
                             <Badge badgeContent={17} color="error">
                                 <NotificationsIcon />
                             </Badge>
-                        </IconButton>
-                        <IconButton
+                        </IconButton>}
+
+                        {account !== null && <IconButton
                             size="large"
                             edge="end"
                             aria-label="account of current user"
@@ -224,7 +214,25 @@ export default function MainAppBar() {
                             color="inherit"
                         >
                             <AccountCircle />
-                        </IconButton>
+                        </IconButton>}
+                        {account === null && <Button
+                            aria-label="account of current user"
+                            onClick={() => goURL('/signup')}
+                            color="inherit"
+                            style={{marginLeft: "5px", marginRight: "5px"}}
+                        >
+                            {t('appBar.createAccount')}
+                        </Button>}
+                        {account === null && <Button
+                            aria-label="account of current user"
+                            onClick={() => goURL('/login')}
+                            color="primary"
+                            variant="contained"
+                            style={{marginLeft: "5px", marginRight: "5px"}}
+                            disableElevation
+                        >
+                            {t('appBar.login')}
+                        </Button>}
                     </Box>
                     <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
                         <IconButton

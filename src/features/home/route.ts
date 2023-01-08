@@ -1,4 +1,5 @@
-import { lazy } from 'react';
+import {lazy} from 'react';
+import ArticleView from "@/features/home/ArticleView";
 
 const Home = lazy(() => import('./index'));
 
@@ -9,4 +10,9 @@ export default [
     exact: true,
     component: Home,
   },
+  {
+    name: 'article',
+    path: '/wiki/',
+    component: ArticleView,
+  }
 ];
