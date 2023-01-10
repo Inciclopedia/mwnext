@@ -1,3 +1,9 @@
+$screenXL: 1920px;
+$screenLG: 1280px;
+$screenMD: 1024px;
+$screenSM: 768px;
+$screenXS: 375px;
+
 @mixin min($bp, $max: 'null', $device: 'screen') {
   @if $max == 'null' {
     @media only #{$device} and (min-width: #{$bp}) {
