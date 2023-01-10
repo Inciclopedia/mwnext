@@ -5,6 +5,7 @@ import routes from '@/router';
 import {compareTwoObject} from '@/utils';
 import {ILayout, selectDisplayLayout, setDisplayLayout,} from '@/store/slices/layoutSlice';
 import {useShallowEqualSelector} from '@/hooks/useShallowEqualSelector';
+import {useMediaQuery, useTheme} from "@mui/material";
 
 const Main: React.FC = () => {
   const layout: ILayout = useShallowEqualSelector(selectDisplayLayout);
@@ -20,12 +21,14 @@ const Main: React.FC = () => {
     }
   };
   const { header } = useSelector(selectDisplayLayout);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <div id="main" style={{
       height: header ? "calc(100%-72px)" : "100%",
       overflow: "hidden",
-      paddingTop: header ? "72px" : 0
+      paddingTop: header ? (isMobile ? "64px" : "72px") : 0
     }}>
       <Switch>
         {routes.map(

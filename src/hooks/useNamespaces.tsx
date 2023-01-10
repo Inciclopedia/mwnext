@@ -18,7 +18,7 @@ const useNamespaces = (cached = true): {namespaces: NamespacesResponse, error: s
         }).catch((error) => {
             setError({code: "clientexception", info: error.message});
         })
-    }, [maybenamespaces, cached]);
+    }, [cached]);
     return { namespaces, error };
 }
 

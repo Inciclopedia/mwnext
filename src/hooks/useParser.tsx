@@ -5,6 +5,8 @@ const useParser = (params: ParserArguments) => {
     const [ parsed, setParsed ] = useState(null);
     const [ error, setError ] = useState(null);
     useEffect(() => {
+        setParsed(null);
+        setError(null);
         parseWikitext(params).then((result) => {
             if (result.status < 400 && result.data && result.data.parse) {
                 setParsed(result.data.parse);
