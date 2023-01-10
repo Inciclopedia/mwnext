@@ -17,15 +17,15 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import {createTheme, ThemeProvider} from "@mui/material/styles";
+import {ThemeProvider} from "@mui/material/styles";
 import CssBaseline from '@mui/material/CssBaseline';
+import {useTheme} from "@mui/material";
 
 // load app SCSS styles
 import(`./themes/${process.env.REACT_APP_FLAVOR}/styles/App.scss`);
 
-const theme = createTheme();
-
 const ReactApp: React.FC = () => {
+  const theme = useTheme();
   return (
     <Router>
       <Helmet>

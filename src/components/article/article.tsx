@@ -1,45 +1,29 @@
-import {ParserArguments, WikiProp} from "@/apis/parser";
+import {ParserArguments} from "@/apis/parser";
 import useParser from "@/hooks/useParser";
 import React from "react";
-import {ScopedCssBaseline, useMediaQuery, useTheme} from "@mui/material";
-import Box from "@mui/material/Box";
+import {ScopedCssBaseline} from "@mui/material";
+import usePageSource from "@/hooks/usePageSource";
+import "../../assets/skin.css";
 
-export default function Article(parserArgs: ParserArguments) {
-    const {mwnextHideTitle} = parserArgs;
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+interface ArticleProps {
+    mwnextHideTitle?: boolean;
+}
+
+export default function Article(args: ParserArguments & ArticleProps) {
+    const {mwnextHideTitle, ...parserArgs} = args;
     const { parsed: page, error } = useParser(parserArgs);
-    const { parsed: commonCss } = useParser({
-        page: 'MediaWiki:Common.css',
-        prop: [WikiProp.wikitext]
-    });
-    const { parsed: monobookCss } = useParser({
-        page: 'MediaWiki:Monobook.css',
-        prop: [WikiProp.wikitext]
-    });
+    const { source: commonCss } = usePageSource("MediaWiki:Common.css");
+    const { source: monobookCss } = usePageSource("MediaWiki:Monobook.css");
     if (mwnextHideTitle) {
         document.title = process.env.REACT_APP_NAME;
-        window.postMessage("title ");
+        window.postMessage("title ", "*");
     } else if (page && page.displaytitle) {
     document.title = page.displaytitle + " - " + process.env.REACT_APP_NAME;
-    window.postMessage("title " + page.displaytitle);
+    window.postMessage("title " + page.displaytitle, "*");
     }
     return <ScopedCssBaseline><style>
-        {commonCss && commonCss.wikitext["*"]}
+        {commonCss}{monobookCss}
         </style>
-        <style>
-            {monobookCss && monobookCss.wikitext["*"]}
-        </style>
-        <Box sx={{
-            overflowX: "auto",
-            overflowY: "auto",
-            width: isMobile ? "calc(100% - 20px)" : "calc(100% - 270px)",
-            height: "calc(100% - 92px)",
-            position: "absolute",
-            left: isMobile ? 0 : "250px",
-            margin: "10px"
-        }}>
-        {page !== null && <div dangerouslySetInnerHTML={{__html: page.text["*"]}}/>}
-        {error !== null && <div>{error.info}</div>}
-    </Box></ScopedCssBaseline>
+        {page !== null && <div dangerouslySetInnerHTML={{__html: page.text}}/>}
+        {error !== null && <div>{error.info}</div>}</ScopedCssBaseline>
 }

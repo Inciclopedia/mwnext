@@ -10,11 +10,12 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import {createTheme, ThemeProvider} from '@mui/material/styles';
+import {ThemeProvider} from '@mui/material/styles';
 import useImage from "@/hooks/useImage";
 import {useTranslation} from "react-i18next";
 import {getCurrentUser, performLogin} from "@/apis/auth";
 import {goURL} from "@/helpers/router";
+import {useTheme} from "@mui/material";
 
 function Copyright(props: any) {
     return (
@@ -29,9 +30,8 @@ function Copyright(props: any) {
     );
 }
 
-const theme = createTheme();
-
 export default function Login() {
+    const theme = useTheme();
     const { t, i18n } = useTranslation();
     const landing = useImage("landing.jpg");
     const logo = useImage("logo.png");

@@ -41,7 +41,9 @@ module.exports = merge(common, {
     host,
     hot: true,
     port: PORT,
-    historyApiFallback: true,
+    historyApiFallback: {
+      disableDotRule: true,
+    },
     onAfterSetupMiddleware: () => {
       openBrowser && openBrowser(`http://127.0.0.1:${PORT}/`);
     },

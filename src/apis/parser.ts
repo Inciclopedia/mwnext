@@ -26,7 +26,8 @@ export enum WikiProp {
     limitreporthtml,
     parsetree,
     parsewarnings,
-    parsewarningshtml
+    parsewarningshtml,
+    headitems
 }
 
 export interface ParserArguments {
@@ -60,11 +61,6 @@ export interface ParserArguments {
     templatesandboxtext?: string;
     templatesandboxcontentmodel?: string;
     templatesandboxcontentformat?: string;
-    mwnextHideTitle?: boolean;
-}
-
-export interface ParserText {
-    "*": string;
 }
 
 export interface Category {
@@ -105,8 +101,8 @@ export interface Property {
 export interface ParserResult {
     title?: string;
     pageid?: number;
-    text?: ParserText;
-    wikitext?: ParserText;
+    text?: string;
+    wikitext?: string;
     langlinks?: string[];
     categories?: Category[];
     links?: Link[];
@@ -119,6 +115,7 @@ export interface ParserResult {
     displaytitle?: string;
     iwlinks?: Link[];
     properties?: Property[];
+    headhtml?: string;
 }
 
 export interface ParserError {
@@ -138,6 +135,7 @@ const parseWikitext = async (params: ParserArguments): Promise<AxiosResponse<Par
     const urlParams = new URLSearchParams();
     urlParams.append("action", "parse");
     urlParams.append("format", "json");
+    urlParams.append("formatversion", "2");
     for (const key of Object.getOwnPropertyNames(params)) {
         const value = params[key as keyof ParserArguments];
         if (!value) {
@@ -162,5 +160,16 @@ const parseWikitext = async (params: ParserArguments): Promise<AxiosResponse<Par
     return HttpRequest.get('/api.php?' + urlParams.toString());
 }
 
+export const getWikitext = async (page: string): Promise<string> => {
+    const response = await parseWikitext({
+        page,
+        prop: [WikiProp.wikitext]
+    });
+    if (response.status < 400 && response.data && response.data.parse) {
+        return Promise.resolve(response.data.parse.wikitext);
+    } else {
+        return Promise.reject();
+    }
+}
 
 export default parseWikitext;

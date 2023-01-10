@@ -9,9 +9,10 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
-import {createTheme, ThemeProvider} from "@mui/material/styles";
+import {ThemeProvider} from "@mui/material/styles";
 import {useTranslation} from "react-i18next";
 import useImage from "@/hooks/useImage";
+import {useTheme} from "@mui/material";
 
 
 function Copyright(props: any) {
@@ -27,9 +28,8 @@ function Copyright(props: any) {
     );
 }
 
-const theme = createTheme();
-
 export default function Logout() {
+    const theme = useTheme();
     const { t } = useTranslation();
     const landing = useImage("landing.jpg");
     const logo = useImage("logo.png");

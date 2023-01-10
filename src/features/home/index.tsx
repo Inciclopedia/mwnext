@@ -1,9 +1,11 @@
 import React from 'react';
-import {WikiProp} from "@/apis/parser";
-import Article from "@/components/article/article";
+import ArticleView from "@/features/home/ArticleView";
+import usePageSource from "@/hooks/usePageSource";
 
 const Home: React.FC = () => {
-  return <Article mwnextHideTitle page="Inciclopedia:Portada" redirects={true} prop={[WikiProp.text, WikiProp.displaytitle]} useskin="vector" />
+  const { source: mainpage } = usePageSource("MediaWiki:Mainpage");
+  console.log("mainpage: "+ mainpage);
+  return mainpage && <ArticleView page={mainpage} mwnextHideTitle />
 };
 
 export default Home;

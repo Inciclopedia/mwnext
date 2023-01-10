@@ -1,0 +1,2 @@
+# Get login token
+GET http://{{root}}/w/load.php?modules=site.styles&only=styles&skin=vector

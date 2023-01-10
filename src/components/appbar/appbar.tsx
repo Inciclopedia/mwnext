@@ -1,12 +1,11 @@
 import * as React from 'react';
 import {KeyboardEvent, useEffect, useState} from 'react';
-import {alpha, createTheme, styled} from '@mui/material/styles';
+import {alpha, styled} from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
@@ -21,7 +20,7 @@ import useAccount from "@/hooks/useAccount";
 import {goURL} from "@/helpers/router";
 import useFile from "@/hooks/useFile";
 import Button from "@mui/material/Button";
-import {Autocomplete, autocompleteClasses, useMediaQuery} from "@mui/material";
+import {Autocomplete, autocompleteClasses, useMediaQuery, useTheme} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {autocomplete, AutocompleteResult} from "@/apis/autocomplete";
 
@@ -41,38 +40,14 @@ const Search = styled('div')(({ theme }) => ({
     },
 }));
 
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-        padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('md')]: {
-            width: '20ch',
-        },
-    },
-}));
-
-const theme = createTheme();
 
 export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (value: boolean) => void}) {
+    const theme = useTheme();
     const {drawerOpen, setDrawerOpen} = props;
     const [title, setTitle] = useState(process.env.REACT_APP_NAME);
     useEffect(() => {
         window.addEventListener('message', (ev: MessageEvent) => {
-            if (ev && ev.data && ev.data.startsWith("title ")) {
+            if (ev && ev.data && typeof(ev.data) === "string" && ev.data.startsWith("title ")) {
                 document.title = ev.data.replace("title ", "");
                 setTitle(document.title);
                 document.title = document.title ? document.title + " - " + process.env.REACT_APP_NAME : process.env.REACT_APP_NAME;
@@ -93,7 +68,7 @@ export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (
     const [options, setOptions] = React.useState<readonly AutocompleteResult[]>([]);
     const [search, setSearch ] = useState("");
     const [autocompleteText, setAutocompleteText] = useState(t("appBar.loading"));
-    const loading = open && search.length > 3 && options.length === 0;
+    const loading = open && search.length > 0 && options.length === 0;
     const [searchMobile, setSearchMobile] = useState(false);
 
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -165,7 +140,7 @@ export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (
             clearTimeout(throttle);
             throttle = null;
         }
-        if (search != "" && search.length > 3) {
+        if (search != "" && search.length > 0) {
             throttle = setTimeout(() => {
                 setOptions([]);
                 autocomplete(search, 10).then((results) => {
@@ -195,7 +170,7 @@ export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (
                     >
                         <MenuIcon />
                     </IconButton>}
-                    {!isMobile && <a href="/" title={process.env.REACT_APP_NAME}>
+                    {(!isMobile || !title) && <a href="/" title={process.env.REACT_APP_NAME}>
                     {file !== null && <img src={file} alt={process.env.REACT_APP_NAME} style={{width: 'auto', height: '64px', margin: "5px"}} />}
                     {file === null && <Typography
                         variant="h6"
@@ -212,9 +187,9 @@ export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (
                         component="div"
                         sx={{marginLeft: '5px'}}
                     >
-                        {title}
+                        <span dangerouslySetInnerHTML={{__html:  title}}></span>
                     </Typography>}
-                    {(!isMobile || !searchMobile) && <Box sx={{ flexGrow: 1 }} />}
+                    {(!isMobile || !searchMobile) && <Box sx={{ flexGrow: 5 }} />}
                     {(!isMobile || searchMobile) &&
                     <Search>
                         <Autocomplete
@@ -265,7 +240,6 @@ export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (
                         />
 
                     </Search>}
-                    {(!isMobile || !searchMobile) && <Box sx={{ flexGrow: 1 }} />}
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                         {account !== null && <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                             <Badge badgeContent={4} color="error">
