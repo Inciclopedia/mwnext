@@ -1,15 +1,26 @@
 import {useEffect, useState} from "react";
 import parseWikitext, {ParserArguments} from "@/apis/parser";
 
-const useParser = (params: ParserArguments) => {
+export interface UseParserProps {
+    cached?: boolean;
+}
+
+const useParser = (params: ParserArguments & UseParserProps) => {
+    const {page, cached} = params;
+    const maybePageSource = window.sessionStorage.getItem("source_" + page);
     const [ parsed, setParsed ] = useState(null);
     const [ error, setError ] = useState(null);
     useEffect(() => {
+        if (maybePageSource && cached) {
+            setParsed(JSON.parse(maybePageSource));
+            return;
+        }
         setParsed(null);
         setError(null);
         parseWikitext(params).then((result) => {
             if (result.status < 400 && result.data && result.data.parse) {
                 setParsed(result.data.parse);
+                window.sessionStorage.setItem("source_" + page, JSON.stringify(result.data.parse));
             } else if (result.data && result.data.error) {
                 setError(result.data.error);
             } else {

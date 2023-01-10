@@ -4,6 +4,8 @@ import React, {useEffect} from "react";
 import {ScopedCssBaseline, Skeleton} from "@mui/material";
 import usePageSource from "@/hooks/usePageSource";
 import "../../assets/skin.css";
+import ErrorIcon from '@mui/icons-material/Error';
+import ErrorView from "@/components/errorview/errorview";
 
 interface ArticleProps {
     mwnextHideTitle?: boolean;
@@ -26,7 +28,9 @@ export default function Article(args: ParserArguments & ArticleProps) {
     return <ScopedCssBaseline><style>
         {commonCss}{monobookCss}
         </style>
-        {!page && <Skeleton variant="rectangular" sx={{width: "100%", height: "100%"}} />}
+        {!page && !error && <Skeleton variant="rectangular" sx={{width: "100%", height: "100%"}} />}
         {<div dangerouslySetInnerHTML={{__html: page && page.text}}/>}
-        {error !== null && <div>{error.info}</div>}</ScopedCssBaseline>
+        {error !== null && <ErrorView errorMessage={JSON.stringify(error)} icon={<ErrorIcon color="error" />}/>}
+
+        </ScopedCssBaseline>
 }

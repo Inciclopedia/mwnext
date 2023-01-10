@@ -11,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import CampaignIcon from '@mui/icons-material/Campaign';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -20,9 +21,10 @@ import useAccount from "@/hooks/useAccount";
 import {goURL} from "@/helpers/router";
 import useFile from "@/hooks/useFile";
 import Button from "@mui/material/Button";
-import {Autocomplete, autocompleteClasses, useMediaQuery, useTheme} from "@mui/material";
+import {Autocomplete, autocompleteClasses, Popover, useMediaQuery, useTheme} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {autocomplete, AutocompleteResult} from "@/apis/autocomplete";
+import useParser from "@/hooks/useParser";
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -70,6 +72,27 @@ export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (
     const [autocompleteText, setAutocompleteText] = useState(t("appBar.loading"));
     const loading = open && search.length > 0 && options.length === 0;
     const [searchMobile, setSearchMobile] = useState(false);
+    const { parsed: sitenotice } = useParser({page: "Mediawiki:Sitenotice", cached: true});
+    const [sitenoticeAnchor, setSitenoticeAnchor] = React.useState<HTMLButtonElement | null>(null);
+    const [unreadSitenotice, setUnreadSitenotice] = useState(false);
+    useEffect(() => {
+        if (sitenotice && sitenotice.text !== window.localStorage.getItem("lastSitenotice")) {
+            setUnreadSitenotice(true);
+        }
+    }, [sitenotice]);
+
+    const openSitenotice = (event: React.MouseEvent<HTMLButtonElement>) => {
+        window.localStorage.setItem("lastSitenotice", sitenotice.text);
+        setUnreadSitenotice(false);
+        setSitenoticeAnchor(event.currentTarget);
+    };
+
+    const closeSitenotice = () => {
+        setSitenoticeAnchor(null);
+    };
+
+    const sitenoticeOpen = Boolean(sitenoticeAnchor);
+    const sitenoticePopperId = sitenoticeOpen ? 'simple-popover' : undefined;
 
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -255,6 +278,16 @@ export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (
                                 <NotificationsIcon />
                             </Badge>
                         </IconButton>}
+                        {sitenotice && <IconButton
+                            size="large"
+                            aria-label="sitenotice"
+                            color="inherit" onClick={openSitenotice} aria-describedby={sitenoticePopperId}
+                        >
+                            <Badge variant="dot" invisible={!unreadSitenotice} color="error">
+                                <CampaignIcon />
+                            </Badge>
+                        </IconButton>}
+
 
                         {account !== null && <IconButton
                             size="large"
@@ -291,6 +324,15 @@ export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (
                             setSearchMobile(!searchMobile);
 
                         }}><SearchIcon /></IconButton>}
+                        {isMobile && sitenotice && <IconButton
+                            size="large"
+                            aria-label="sitenotice"
+                            color="inherit" onClick={openSitenotice} aria-describedby={sitenoticePopperId}
+                        >
+                            <Badge variant="dot" invisible={!unreadSitenotice} color="error">
+                                <CampaignIcon />
+                            </Badge>
+                        </IconButton>}
                         <IconButton
                             size="large"
                             aria-label="show more"
@@ -304,6 +346,26 @@ export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (
                     </Box>
                 </Toolbar>
             </AppBar>
+            {sitenotice && <Popover
+                id={sitenoticePopperId}
+                open={sitenoticeOpen}
+                anchorEl={sitenoticeAnchor}
+                onClose={closeSitenotice}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
+                sx={{
+                    marginTop: "20px"
+                }}
+                PaperProps={{
+                    sx: {
+                        padding: "20px"
+                    }
+                }}
+            >
+                <div dangerouslySetInnerHTML={{__html: sitenotice && sitenotice.text}}/>
+            </Popover>}
             {renderMobileMenu}
             {renderMenu}
         </Box>
