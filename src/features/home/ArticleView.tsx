@@ -1,6 +1,4 @@
 import React from 'react';
-import {WikiProp} from "@/apis/parser";
-import Article from "@/components/article/article";
 import {Divider, Fab, ListItemIcon, ListItemText, Tab, Tabs, useMediaQuery, useTheme} from "@mui/material";
 import Box from "@mui/material/Box";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
@@ -9,6 +7,7 @@ import HistoryIcon from "@mui/icons-material/History";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LowPriorityIcon from '@mui/icons-material/LowPriority';
+import TranslateIcon from '@mui/icons-material/Translate';
 import LockIcon from '@mui/icons-material/Lock';
 import IconButton from "@mui/material/IconButton";
 import {Namespace} from "@/apis/siteinfo";
@@ -16,6 +15,7 @@ import useNamespaces from "@/hooks/useNamespaces";
 import {goURL} from "@/helpers/router";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import ArticleDispatcher from "@/features/home/ArticleDispatcher";
 
 export interface ArticleViewProps {
     page?: string;
@@ -90,6 +90,9 @@ const ArticleView: React.FC<ArticleViewProps> = (props: ArticleViewProps) => {
             <IconButton title="Historial">
                 <HistoryIcon/>
             </IconButton>
+            <IconButton title="Otros idiomas">
+                <TranslateIcon/>
+            </IconButton>
             <IconButton title="Guardar en mi lista de seguimiento">
                 <StarBorderIcon/>
             </IconButton></>}
@@ -117,6 +120,12 @@ const ArticleView: React.FC<ArticleViewProps> = (props: ArticleViewProps) => {
                         <HistoryIcon fontSize="small"/>
                     </ListItemIcon>
                     <ListItemText>Historial</ListItemText>
+                </MenuItem>
+                <MenuItem onClick={closeMenu}>
+                    <ListItemIcon>
+                        <TranslateIcon fontSize="small"/>
+                    </ListItemIcon>
+                    <ListItemText>Otros idiomas</ListItemText>
                 </MenuItem>
                 <MenuItem onClick={closeMenu}>
                     <ListItemIcon>
@@ -157,8 +166,7 @@ const ArticleView: React.FC<ArticleViewProps> = (props: ArticleViewProps) => {
             paddingLeft: isMobile ? "2px" : "10px",
             paddingRight: isMobile ? "2px" : "10px",
             paddingBottom: isMobile ? "0px" : "10px"
-        }}><Article page={pagename} redirects={true}
-                        prop={[WikiProp.text, WikiProp.headhtml, WikiProp.displaytitle]} useskin="vector"/></div>
+        }}><ArticleDispatcher page={page}/></div>
     </div>;
 };
 
