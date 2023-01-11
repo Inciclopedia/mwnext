@@ -11,7 +11,7 @@ const ArticleDispatcher = (props: { page: string }) => {
         return <Suspense fallback={<div>Loading...</div>}><SpecialPage/></Suspense>;
     } else {
         return <Article page={page} redirects={true}
-                        prop={[WikiProp.text, WikiProp.headhtml, WikiProp.displaytitle]} useskin="vector"/>
+                        prop={[WikiProp.text, WikiProp.headhtml, WikiProp.displaytitle, WikiProp.categories]} useskin="vector"/>
     }
 }
 

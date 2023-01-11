@@ -97,13 +97,19 @@ export interface Property {
     "*": string;
 }
 
+export interface LangLink {
+    lang: string;
+    url: string;
+    langname: string;
+}
+
 
 export interface ParserResult {
     title?: string;
     pageid?: number;
     text?: string;
     wikitext?: string;
-    langlinks?: string[];
+    langlinks?: LangLink[];
     categories?: Category[];
     links?: Link[];
     templates?: Template[];
