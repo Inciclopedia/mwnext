@@ -12,7 +12,11 @@
     "continue": "Continue",
     "purgeTitle": "Purge this page",
     "purgeSubtitle": "Clear the cache of this page?",
-    "whatsThis": "What's this?"
+    "whatsThis": "What's this?",
+    "couldntshare": "Couldn't share the page. Make sure your browser supports Share API.",
+    "thisIsOld": "You are seeing an old revision of this page.",
+    "revisionBy": "Revision of {{timestamp}} by {{user}}. {{comment}}",
+    "viewLive": "View live version"
   },
   "es": {
     "oops": "¡Vaya! Algo fue mal...",
@@ -27,7 +31,11 @@
     "continue": "Continuar",
     "purgeTitle": "Purgar esta página",
     "purgeSubtitle": "¿Quieres vaciar la antememoria de esta página?",
-    "whatsThis": "¿Qué es esto?"
+    "whatsThis": "¿Qué es esto?",
+    "couldntshare": "No se pudo compartir. Asegúrate que tu navegador admita Share API.",
+    "thisIsOld": "Estás viendo una revisión antigua de la página.",
+    "revisionBy": "Revisión del {{timestamp}} de {{user}}. {{comment}}",
+    "viewLive": "Ver la versión actual"
   },
   "ca": {
     "oops": "Ostres, tenim un problema...",
@@ -42,6 +50,10 @@
     "continue": "Continuar",
     "purgeTitle": "Purgar aquesta pàgina",
     "purgeSubtitle": "Voleu alliberar la memòria cau d'aquesta pàgina?",
-    "whatsThis": "Què és això?"
+    "whatsThis": "Què és això?",
+    "couldntshare": "No s'ha pogut compartir. Assegureu-vos que el vostre navegador admeti la API Share.",
+    "thisIsOld": "Esteu veient una revisió antiga de la pàgina.",
+    "revisionBy": "Revisió del {{timestamp}} de {{user}}. {{comment}}",
+    "viewLive": "Veure la versió actual"
   }
 }

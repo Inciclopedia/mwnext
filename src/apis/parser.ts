@@ -107,6 +107,7 @@ export interface LangLink {
 export interface ParserResult {
     title?: string;
     pageid?: number;
+    revid?: number;
     text?: string;
     wikitext?: string;
     langlinks?: LangLink[];

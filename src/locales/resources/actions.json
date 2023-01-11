@@ -1,0 +1,38 @@
+{
+  "en": {
+    "edit": "Edit",
+    "history": "History",
+    "otherLangs": "Other languages",
+    "saveList": "Save in my watchlist",
+    "printableVersion": "Printable version",
+    "permanentLink": "Permanent link",
+    "share": "Share",
+    "delete": "Delete",
+    "move": "Move",
+    "protect": "Protect"
+  },
+  "es": {
+    "edit": "Editar",
+    "history": "Historial",
+    "otherLangs": "Otros idiomas",
+    "saveList": "Guardar en mi lista de seguimiento",
+    "printableVersion": "Versión para imprimir",
+    "permanentLink": "Enlace permanente",
+    "share": "Compartir",
+    "delete": "Borrar",
+    "move": "Trasladar",
+    "protect": "Proteger"
+  },
+  "ca": {
+    "edit": "Editar",
+    "history": "Historial",
+    "otherLangs": "Altres llengües",
+    "saveList": "Desa a la meva llista de seguiment",
+    "printableVersion": "Versió per imprimir",
+    "permanentLink": "Enllaç permanent",
+    "share": "Compartir",
+    "delete": "Esborrar",
+    "move": "Moure",
+    "protect": "Protegir"
+  }
+}

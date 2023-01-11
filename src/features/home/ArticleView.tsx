@@ -10,6 +10,9 @@ import LowPriorityIcon from '@mui/icons-material/LowPriority';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TranslateIcon from '@mui/icons-material/Translate';
 import LockIcon from '@mui/icons-material/Lock';
+import PrintIcon from '@mui/icons-material/Print';
+import PhishingIcon from '@mui/icons-material/Phishing';
+import ShareIcon from '@mui/icons-material/Share';
 import IconButton from "@mui/material/IconButton";
 import {Namespace} from "@/apis/siteinfo";
 import useNamespaces from "@/hooks/useNamespaces";
@@ -19,6 +22,7 @@ import MenuItem from "@mui/material/MenuItem";
 import ArticleDispatcher from "@/features/home/ArticleDispatcher";
 import useParser from "@/hooks/useParser";
 import {LangLink, WikiProp} from "@/apis/parser";
+import {useTranslation} from "react-i18next";
 
 export interface ArticleViewProps {
     page?: string;
@@ -31,10 +35,11 @@ const ArticleView: React.FC<ArticleViewProps> = (props: ArticleViewProps) => {
     const pagename = page || decodeURIComponent(window.location.pathname.split("/").slice(2).join('/')).replace(/\s/g, "_");
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const {namespaces} = useNamespaces();
-    const {parsed: langinfo} = useParser({ page, prop: [WikiProp.langlinks] });
-    const langLinks = langinfo && langinfo.langlinks;
+    const {parsed: pageinfo} = useParser({ page, prop: [WikiProp.wikitext, WikiProp.langlinks, WikiProp.revid] });
+    const langLinks = pageinfo && pageinfo.langlinks;
     const [moreMenuAnchor, setMoreMenuAnchor] = React.useState<null | HTMLElement>(null);
     const moreMenuOpen = Boolean(moreMenuAnchor);
+    const {t} = useTranslation();
     const openMoreMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
         setMoreMenuAnchor(event.currentTarget);
     };
@@ -49,6 +54,26 @@ const ArticleView: React.FC<ArticleViewProps> = (props: ArticleViewProps) => {
     const closelangMenu = () => {
         setlangMenuAnchor(null);
     };
+
+    const notImplemented = () => {
+        alert("Not implemented :)");
+        closeMoreMenu();
+    }
+    const share = () => {
+        if (!navigator.share) {
+            return;
+        }
+        try {
+            navigator.share({
+                title: document.title,
+                text: pageinfo.wikitext,
+                url: window.location.href
+            });
+        } catch (e) {
+            alert(t("ui.couldntshare"));
+        }
+
+    }
     let mainPage = "";
     let talkPage = "";
     let isTalkPage = false;
@@ -83,7 +108,7 @@ const ArticleView: React.FC<ArticleViewProps> = (props: ArticleViewProps) => {
         paddingRight: isMobile ? "4px" : "10px",
         paddingBottom: isMobile ? "0px" : "10px"}}>
         {isMobile && <Fab color="primary" aria-label="edit" title="Editar"
-                          sx={{position: "fixed", top: "100%", left: "100%", marginLeft: "-96px", marginTop: "-96px"}}>
+                          sx={{position: "fixed", top: "100%", left: "100%", marginLeft: "-96px", marginTop: "-96px"}} onClick={notImplemented}>
             <EditIcon/>
         </Fab>}<Tabs value={isTalkPage ? 1 : 0} onChange={(ev, tabClicked) => {
         if (tabClicked == 1 && !isTalkPage) {
@@ -97,16 +122,16 @@ const ArticleView: React.FC<ArticleViewProps> = (props: ArticleViewProps) => {
         <Tab label="Página"></Tab>
         <Tab label="Discusión"></Tab>
         <Box sx={{flexGrow: 1}}/>
-        {!isMobile && <><IconButton title="Editar">
+        {!isMobile && <><IconButton title="Editar" onClick={notImplemented}>
             <EditIcon/>
         </IconButton>
-            <IconButton title="Historial">
+            <IconButton title="Historial" onClick={notImplemented}>
                 <HistoryIcon/>
             </IconButton>
         {langLinks && langLinks.length > 0 && <IconButton onClick={openlangMenu} title="Otros idiomas">
                 <TranslateIcon/>
             </IconButton>}
-            <IconButton title="Guardar en mi lista de seguimiento">
+            <IconButton title="Guardar en mi lista de seguimiento" onClick={notImplemented}>
                 <StarBorderIcon/>
             </IconButton></>}
         <IconButton onClick={openMoreMenu} title="Más acciones">
@@ -121,9 +146,7 @@ const ArticleView: React.FC<ArticleViewProps> = (props: ArticleViewProps) => {
                 'aria-labelledby': 'basic-button',
             }}
         >
-            {langLinks && langLinks.map((langlink: LangLink) => <MenuItem key={langlink.url} onClick={() => {
-                window.location.href = langlink.url;
-            }}>
+            {langLinks && langLinks.map((langlink: LangLink) => <MenuItem key={langlink.url} component="a" href={langlink.url}>
                     <ListItemText>{langlink.langname}</ListItemText>
                 </MenuItem>)}
         </Menu>
@@ -137,52 +160,71 @@ const ArticleView: React.FC<ArticleViewProps> = (props: ArticleViewProps) => {
             }}
         >
             {isMobile && <>
-                <MenuItem onClick={closeMoreMenu}>
+                <MenuItem onClick={notImplemented}>
                     <ListItemIcon>
                         <EditIcon fontSize="small"/>
                     </ListItemIcon>
-                    <ListItemText>Editar</ListItemText>
+                    <ListItemText>{t("actions.edit")}</ListItemText>
                 </MenuItem>
-                <MenuItem onClick={closeMoreMenu}>
+                <MenuItem onClick={notImplemented}>
                     <ListItemIcon>
                         <HistoryIcon fontSize="small"/>
                     </ListItemIcon>
-                    <ListItemText>Historial</ListItemText>
+                    <ListItemText>{t("actions.history")}</ListItemText>
                 </MenuItem>
                 <MenuItem onClick={() => { setlangMenuAnchor(moreMenuAnchor); closeMoreMenu(); }}>
                     <ListItemIcon>
                         <TranslateIcon fontSize="small"/>
                     </ListItemIcon>
-                    <ListItemText>Otros idiomas</ListItemText>
+                    <ListItemText>{t("actions.otherLangs")}</ListItemText>
                     <ListItemIcon>
                         <ChevronRightIcon fontSize="medium"/>
                     </ListItemIcon>
                 </MenuItem>
-                <MenuItem onClick={closeMoreMenu}>
+                <MenuItem onClick={notImplemented}>
                     <ListItemIcon>
                         <StarBorderIcon fontSize="small"/>
                     </ListItemIcon>
-                    <ListItemText>Guardar en mi lista de seguimiento</ListItemText>
+                    <ListItemText>{t("actions.saveList")}</ListItemText>
                 </MenuItem>
                 <Divider />
             </>}
-            <MenuItem onClick={closeMoreMenu}>
+            <MenuItem onClick={notImplemented}>
+                <ListItemIcon>
+                    <PrintIcon fontSize="small"/>
+                </ListItemIcon>
+                <ListItemText>{t("actions.printableVersion")}</ListItemText>
+            </MenuItem>
+            <MenuItem component="a" href={"/wiki/" + page + "?oldid=" + (pageinfo && pageinfo.revid)}>
+                <ListItemIcon>
+                    <PhishingIcon fontSize="small"/>
+                </ListItemIcon>
+                <ListItemText>{t("actions.permanentLink")}</ListItemText>
+            </MenuItem>
+            {navigator.share && <MenuItem onClick={() => {share(); closeMoreMenu()}}>
+                <ListItemIcon>
+                    <ShareIcon fontSize="small"/>
+                </ListItemIcon>
+                <ListItemText>{t("actions.share")}</ListItemText>
+            </MenuItem>}
+            <Divider />
+            <MenuItem onClick={notImplemented}>
                 <ListItemIcon>
                     <DeleteIcon fontSize="small"/>
                 </ListItemIcon>
-                <ListItemText>Borrar</ListItemText>
+                <ListItemText>{t("actions.delete")}</ListItemText>
             </MenuItem>
-            <MenuItem onClick={closeMoreMenu}>
+            <MenuItem onClick={notImplemented}>
                 <ListItemIcon>
                     <LowPriorityIcon fontSize="small"/>
                 </ListItemIcon>
-                <ListItemText>Trasladar</ListItemText>
+                <ListItemText>{t("actions.move")}</ListItemText>
             </MenuItem>
-            <MenuItem onClick={closeMoreMenu}>
+            <MenuItem onClick={notImplemented}>
                 <ListItemIcon>
                     <LockIcon fontSize="small"/>
                 </ListItemIcon>
-                <ListItemText>Proteger</ListItemText>
+                <ListItemText>{t("actions.protect")}</ListItemText>
             </MenuItem>
         </Menu>
     </Tabs>

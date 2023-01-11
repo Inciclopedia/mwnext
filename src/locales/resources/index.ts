@@ -7,6 +7,7 @@ import logout from './logout.json';
 import wfMessages from './wfMessages.json';
 import appBar from './appBar.json';
 import ui from './ui.json';
+import actions from './actions.json';
 
 interface IResource {
   [key: string]: Resource;
@@ -19,7 +20,8 @@ const mergeResource: IResource = {
   logout,
   wfMessages,
   appBar,
-  ui
+  ui,
+  actions
 };
 
 export const langs = Object.keys(languages);

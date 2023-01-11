@@ -15,8 +15,9 @@ const ArticleDispatcher = (props: { page: string }) => {
         const SpecialAction = SpecialActions[params.get("action")]
         return <Suspense fallback={<div>Loading...</div>}><SpecialAction/></Suspense>;
     } else {
-        return <Article page={page} redirects={true}
-                        prop={[WikiProp.text, WikiProp.headhtml, WikiProp.displaytitle, WikiProp.categories]} useskin="vector"/>
+        const oldid = params.has("oldid") && params.get("oldid");
+        return <Article page={!oldid && page} redirects={true} oldid={parseInt(oldid)}
+                        prop={[WikiProp.text, WikiProp.headhtml, WikiProp.displaytitle, WikiProp.categories, WikiProp.properties]} useskin="vector"/>
     }
 }
 
