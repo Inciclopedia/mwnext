@@ -7,6 +7,7 @@ import HistoryIcon from "@mui/icons-material/History";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LowPriorityIcon from '@mui/icons-material/LowPriority';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TranslateIcon from '@mui/icons-material/Translate';
 import LockIcon from '@mui/icons-material/Lock';
 import IconButton from "@mui/material/IconButton";
@@ -16,6 +17,8 @@ import {goURL} from "@/helpers/router";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ArticleDispatcher from "@/features/home/ArticleDispatcher";
+import useParser from "@/hooks/useParser";
+import {LangLink, WikiProp} from "@/apis/parser";
 
 export interface ArticleViewProps {
     page?: string;
@@ -28,13 +31,23 @@ const ArticleView: React.FC<ArticleViewProps> = (props: ArticleViewProps) => {
     const pagename = page || decodeURIComponent(window.location.pathname.split("/").slice(2).join('/')).replace(" ", "_");
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const {namespaces} = useNamespaces();
-    const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null);
-    const menuOpen = Boolean(menuAnchor);
-    const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setMenuAnchor(event.currentTarget);
+    const {parsed: langinfo} = useParser({ page, prop: [WikiProp.langlinks] });
+    const langLinks = langinfo && langinfo.langlinks;
+    const [moreMenuAnchor, setMoreMenuAnchor] = React.useState<null | HTMLElement>(null);
+    const moreMenuOpen = Boolean(moreMenuAnchor);
+    const openMoreMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setMoreMenuAnchor(event.currentTarget);
     };
-    const closeMenu = () => {
-        setMenuAnchor(null);
+    const closeMoreMenu = () => {
+        setMoreMenuAnchor(null);
+    };
+    const [langMenuAnchor, setlangMenuAnchor] = React.useState<null | HTMLElement>(null);
+    const langMenuOpen = Boolean(langMenuAnchor);
+    const openlangMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setlangMenuAnchor(event.currentTarget);
+    };
+    const closelangMenu = () => {
+        setlangMenuAnchor(null);
     };
     let mainPage = "";
     let talkPage = "";
@@ -90,44 +103,62 @@ const ArticleView: React.FC<ArticleViewProps> = (props: ArticleViewProps) => {
             <IconButton title="Historial">
                 <HistoryIcon/>
             </IconButton>
-            <IconButton title="Otros idiomas">
+        {langLinks && langLinks.length > 0 && <IconButton onClick={openlangMenu} title="Otros idiomas">
                 <TranslateIcon/>
-            </IconButton>
+            </IconButton>}
             <IconButton title="Guardar en mi lista de seguimiento">
                 <StarBorderIcon/>
             </IconButton></>}
-        <IconButton onClick={openMenu} title="Más acciones">
+        <IconButton onClick={openMoreMenu} title="Más acciones">
             <ExpandMoreIcon/>
         </IconButton>
         <Menu
+            id="lang-menu"
+            anchorEl={langMenuAnchor}
+            open={langMenuOpen}
+            onClose={closelangMenu}
+            MenuListProps={{
+                'aria-labelledby': 'basic-button',
+            }}
+        >
+            {langLinks && langLinks.map((langlink: LangLink) => <MenuItem key={langlink.url} onClick={() => {
+                window.location.href = langlink.url;
+            }}>
+                    <ListItemText>{langlink.langname}</ListItemText>
+                </MenuItem>)}
+        </Menu>
+        <Menu
             id="more-menu"
-            anchorEl={menuAnchor}
-            open={menuOpen}
-            onClose={closeMenu}
+            anchorEl={moreMenuAnchor}
+            open={moreMenuOpen}
+            onClose={closeMoreMenu}
             MenuListProps={{
                 'aria-labelledby': 'basic-button',
             }}
         >
             {isMobile && <>
-                <MenuItem onClick={closeMenu}>
+                <MenuItem onClick={closeMoreMenu}>
                     <ListItemIcon>
                         <EditIcon fontSize="small"/>
                     </ListItemIcon>
                     <ListItemText>Editar</ListItemText>
                 </MenuItem>
-                <MenuItem onClick={closeMenu}>
+                <MenuItem onClick={closeMoreMenu}>
                     <ListItemIcon>
                         <HistoryIcon fontSize="small"/>
                     </ListItemIcon>
                     <ListItemText>Historial</ListItemText>
                 </MenuItem>
-                <MenuItem onClick={closeMenu}>
+                <MenuItem onClick={() => { setlangMenuAnchor(moreMenuAnchor); closeMoreMenu(); }}>
                     <ListItemIcon>
                         <TranslateIcon fontSize="small"/>
                     </ListItemIcon>
                     <ListItemText>Otros idiomas</ListItemText>
+                    <ListItemIcon>
+                        <ChevronRightIcon fontSize="medium"/>
+                    </ListItemIcon>
                 </MenuItem>
-                <MenuItem onClick={closeMenu}>
+                <MenuItem onClick={closeMoreMenu}>
                     <ListItemIcon>
                         <StarBorderIcon fontSize="small"/>
                     </ListItemIcon>
@@ -135,19 +166,19 @@ const ArticleView: React.FC<ArticleViewProps> = (props: ArticleViewProps) => {
                 </MenuItem>
                 <Divider />
             </>}
-            <MenuItem onClick={closeMenu}>
+            <MenuItem onClick={closeMoreMenu}>
                 <ListItemIcon>
                     <DeleteIcon fontSize="small"/>
                 </ListItemIcon>
                 <ListItemText>Borrar</ListItemText>
             </MenuItem>
-            <MenuItem onClick={closeMenu}>
+            <MenuItem onClick={closeMoreMenu}>
                 <ListItemIcon>
                     <LowPriorityIcon fontSize="small"/>
                 </ListItemIcon>
                 <ListItemText>Trasladar</ListItemText>
             </MenuItem>
-            <MenuItem onClick={closeMenu}>
+            <MenuItem onClick={closeMoreMenu}>
                 <ListItemIcon>
                     <LockIcon fontSize="small"/>
                 </ListItemIcon>
