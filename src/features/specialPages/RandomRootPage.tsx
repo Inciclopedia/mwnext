@@ -1,4 +1,7 @@
-import React, {useEffect} from "react";
+import { randomArticle } from "@/apis/randomArticle";
+import { redirectURL } from "@/helpers/router";
+import { result } from "lodash";
+import React, { useEffect } from "react";
 
 export interface RandomRootPageProps {
     myProp?: string;
@@ -6,7 +9,15 @@ export interface RandomRootPageProps {
 
 export default function RandomRootPage(props: RandomRootPageProps) {
     useEffect(() => {
-        console.log("just some random code to avoid tslint complaining, you can delete this block")
-    }, []);
-    return <p>implement me :)</p>
+        randomArticle({
+            rnlimit: 0,
+            rnnamespace: "0",
+            rnfilterredir: "nonredirects"
+        }).then((result) => {
+            const pageName = result.data.query.random[0].title;
+            redirectURL("/wiki/" + pageName);
+        })
+    }, [])
+
+    return <></>;
 }

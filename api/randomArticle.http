@@ -1,0 +1,1 @@
+GET http://{{endpoint}}?action=query&format=json&list=random&rnlimit=1
