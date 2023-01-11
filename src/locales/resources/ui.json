@@ -1,11 +1,47 @@
 {
   "en": {
-    "oops": "Oops, something went wrong..."
+    "oops": "Oops, something went wrong...",
+    "yes": "Yes",
+    "no": "No",
+    "goBack": "Go back",
+    "ok": "OK",
+    "cancel": "Cancel",
+    "abort": "Abort",
+    "retry": "Retry",
+    "ignore": "Ignore",
+    "continue": "Continue",
+    "purgeTitle": "Purge this page",
+    "purgeSubtitle": "Clear the cache of this page?",
+    "whatsThis": "What's this?"
   },
   "es": {
-    "oops": "¡Vaya! Algo fue mal..."
+    "oops": "¡Vaya! Algo fue mal...",
+    "yes": "Sí",
+    "no": "No",
+    "goBack": "Volver atrás",
+    "ok": "Aceptar",
+    "cancel": "Cancelar",
+    "abort": "Anular",
+    "retry": "Reintentar",
+    "ignore": "Ignorar",
+    "continue": "Continuar",
+    "purgeTitle": "Purgar esta página",
+    "purgeSubtitle": "¿Quieres vaciar la antememoria de esta página?",
+    "whatsThis": "¿Qué es esto?"
   },
   "ca": {
-    "oops": "Ostres, tenim un problema..."
+    "oops": "Ostres, tenim un problema...",
+    "yes": "Sí",
+    "no": "No",
+    "goBack": "Tornar endarrere",
+    "ok": "D'acord",
+    "cancel": "Cancel·la",
+    "abort": "Anul·lar",
+    "retry": "Reintentar",
+    "ignore": "Ignorar",
+    "continue": "Continuar",
+    "purgeTitle": "Purgar aquesta pàgina",
+    "purgeSubtitle": "Voleu alliberar la memòria cau d'aquesta pàgina?",
+    "whatsThis": "Què és això?"
   }
 }

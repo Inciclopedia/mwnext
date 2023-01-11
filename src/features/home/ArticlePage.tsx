@@ -4,10 +4,10 @@ import ArticleView from "@/features/home/ArticleView";
 const ArticlePage: React.FC = () => {
     const [pagename, setPagename] = useState(null);
     useEffect(() => {
-        setPagename(decodeURIComponent(window.location.pathname.split("/").slice(2).join('/')).replace(" ", "_"));
+        setPagename(decodeURIComponent(window.location.pathname.split("/").slice(2).join('/')).replace(/\s/g, "_"));
         window.addEventListener('message', ( ev: MessageEvent) => {
             if (ev.data === "url") {
-                setPagename(decodeURIComponent(window.location.pathname.split("/").slice(2).join('/')).replace(" ", "_"));
+                setPagename(decodeURIComponent(window.location.pathname.split("/").slice(2).join('/')).replace(/\s/g, "_"));
             }
         });
     }, []);

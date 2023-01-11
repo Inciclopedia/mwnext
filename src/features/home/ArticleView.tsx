@@ -28,7 +28,7 @@ export interface ArticleViewProps {
 const ArticleView: React.FC<ArticleViewProps> = (props: ArticleViewProps) => {
     const {page} = props;
     const theme = useTheme();
-    const pagename = page || decodeURIComponent(window.location.pathname.split("/").slice(2).join('/')).replace(" ", "_");
+    const pagename = page || decodeURIComponent(window.location.pathname.split("/").slice(2).join('/')).replace(/\s/g, "_");
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const {namespaces} = useNamespaces();
     const {parsed: langinfo} = useParser({ page, prop: [WikiProp.langlinks] });
