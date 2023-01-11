@@ -6,6 +6,11 @@ export const goURL = (path = '/', state?: unknown): void => {
   window.postMessage("url", "*");
 };
 
+export const redirectURL = (path = '/', state?: unknown): void => {
+  history.replace(path, state);
+  window.postMessage("url", "*");
+};
+
 export const replaceURL = (path = '/', state?: unknown): void => {
   history.push(path, state);
 };

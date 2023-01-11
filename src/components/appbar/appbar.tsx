@@ -25,6 +25,7 @@ import {Autocomplete, autocompleteClasses, Popover, useMediaQuery, useTheme} fro
 import TextField from "@mui/material/TextField";
 import {autocomplete, AutocompleteResult} from "@/apis/autocomplete";
 import useParser from "@/hooks/useParser";
+import useNamespaces from "@/hooks/useNamespaces";
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -59,7 +60,9 @@ export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
-
+    const {namespaces} = useNamespaces();
+    const userNamespace = namespaces && namespaces.query && namespaces.query.namespaces && (Object.values(namespaces.query.namespaces).filter((it) => it.canonical === "User"))[0]["*"];
+    const userTalkNamespace = namespaces && namespaces.query && namespaces.query.namespaces && (Object.values(namespaces.query.namespaces).filter((it) => it.canonical === "User talk"))[0]["*"];
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -121,14 +124,14 @@ export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (
             onClose={handleMenuClose}
         >
             {account && <>
-            <MenuItem onClick={handleMenuClose}>{account.name}</MenuItem>
-            <MenuItem onClick={handleMenuClose}>{t('appBar.userTalk')}</MenuItem>
-            <MenuItem onClick={handleMenuClose}>{t('appBar.userPreferences')}</MenuItem>
+            <MenuItem onClick={() => {goURL("/wiki/" + (userNamespace || "User") + ":" + account.name); handleMenuClose();}}>{account.name}</MenuItem>
+            <MenuItem onClick={() => {goURL("/wiki/User talk:" + (userTalkNamespace || "User talk") + ":" + account.name); handleMenuClose();}}>{t('appBar.userTalk')}</MenuItem>
+            <MenuItem onClick={() => {goURL("/wiki/Special:Preferences"); handleMenuClose();}}>{t('appBar.userPreferences')}</MenuItem>
             <MenuItem onClick={() => goURL('/logout')}>{t('appBar.logout')}</MenuItem>
             </>}
             {!account && <>
-            <MenuItem onClick={handleMenuClose}>{t('appBar.createAccount')}</MenuItem>
-            <MenuItem onClick={() => goURL('/login')}>{t('appBar.login')}</MenuItem>
+            <MenuItem onClick={() => {goURL("/wiki/Special:CreateAccount"); handleMenuClose();}}>{t('appBar.createAccount')}</MenuItem>
+            <MenuItem onClick={() => goURL('/wiki/Special:Login')}>{t('appBar.login')}</MenuItem>
             </>}
         </Menu>
     );
@@ -146,11 +149,11 @@ export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (
                 <MenuItem onClick={handleMenuClose}>{account.name}</MenuItem>
                 <MenuItem onClick={handleMenuClose}>{t('appBar.userTalk')}</MenuItem>
                 <MenuItem onClick={handleMenuClose}>{t('appBar.userPreferences')}</MenuItem>
-                <MenuItem onClick={() => goURL('/logout')}>{t('appBar.logout')}</MenuItem>
+                <MenuItem onClick={() => goURL('/wiki/Special:UserLogout')}>{t('appBar.logout')}</MenuItem>
             </>}
             {!account && <>
                 <MenuItem onClick={handleMenuClose}>{t('appBar.createAccount')}</MenuItem>
-                <MenuItem onClick={() => goURL('/login')}>{t('appBar.login')}</MenuItem>
+                <MenuItem onClick={() => goURL('/wiki/Special:UserLogin')}>{t('appBar.login')}</MenuItem>
             </>}
         </Menu>
     );
@@ -310,7 +313,7 @@ export default function MainAppBar(props: {drawerOpen: boolean, setDrawerOpen: (
                         </Button>}
                         {account === null && <Button
                             aria-label="account of current user"
-                            onClick={() => goURL('/login')}
+                            onClick={() => goURL('/wiki/Special:UserLogin')}
                             color="primary"
                             variant="contained"
                             style={{marginLeft: "5px", marginRight: "5px"}}

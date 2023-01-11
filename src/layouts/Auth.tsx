@@ -25,12 +25,12 @@ const Auth: React.FC<IProps> = ({ children }) => {
       } else {
         setAuthenticated("false");
         setAuthenticating(false);
-        goURL('/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search + window.location.hash));
+        goURL('/wiki/Special:UserLogin?redirect=' + encodeURIComponent(window.location.pathname + window.location.search + window.location.hash));
       }
     } catch (error) {
       setAuthenticated("false");
       setAuthenticating(false);
-      goURL('/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search + window.location.hash));
+      goURL('/wiki/Special:UserLogin?redirect=' + encodeURIComponent(window.location.pathname + window.location.search + window.location.hash));
     }
     setRenderRoute(true);
   }, []);
