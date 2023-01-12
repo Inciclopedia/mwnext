@@ -18,7 +18,8 @@ module.exports = merge(common, {
   devtool: 'cheap-module-source-map',
   devServer: {
     allowedHosts: [
-        'mwnext.inciclopedia.es'
+        'mwnext.inciclopedia.es',
+        'inciclopedia.duckdns.org'
     ],
     client: {
       overlay: {
