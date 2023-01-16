@@ -1,6 +1,6 @@
-import {AxiosResponse} from 'axios';
+import { AxiosResponse } from 'axios';
 import HttpRequest from '@/services/http-request';
-import {getCsrfToken, getLoginToken} from "@/apis/tokens";
+import { getCsrfToken, getLoginToken } from "@/apis/tokens";
 
 export interface UserInfo {
     id: number;
@@ -10,7 +10,7 @@ export interface UserInfo {
 
 export interface UserInfoResponse {
     batchcomplete: string;
-    query: {userinfo: UserInfo};
+    query: { userinfo: UserInfo };
 }
 
 export interface ClientLoginResponse {
@@ -22,14 +22,20 @@ export interface ClientLoginResponse {
     }
 }
 
+export interface ResetPasswordResponse {
+    resetpassword: {
+        status: string;
+    }
+}
+
 export const getCurrentUser = async (): Promise<AxiosResponse<UserInfoResponse>> =>
-  HttpRequest.get('/api.php', {
-      params: {
-          "action": "query",
-          "meta": "userinfo",
-          "format": "json"
-      }
-  });
+    HttpRequest.get('/api.php', {
+        params: {
+            "action": "query",
+            "meta": "userinfo",
+            "format": "json"
+        }
+    });
 
 
 const clientLogin = async (username: string, password: string, loginToken: string, callback: string): Promise<AxiosResponse<ClientLoginResponse>> => {
@@ -84,5 +90,35 @@ export const performLogout = async (): Promise<void> => {
     window.localStorage.removeItem("authenticated");
     window.localStorage.removeItem("currentUser");
 
+    return Promise.resolve();
+}
+
+const resetpassword = async (csrfToken: string, user: string): Promise<AxiosResponse<ResetPasswordResponse>> => {
+    const urlParams = new URLSearchParams();
+    urlParams.append("action", "resetpassword");
+    urlParams.append("format", "json");
+    urlParams.append("user", user);
+    const bodyParams = "token=" + encodeURIComponent(csrfToken);
+    return HttpRequest.postUrlEncoded('/api.php?' + urlParams.toString(), bodyParams);
+}
+
+
+export const performReset = async (user: string): Promise<void> => {
+    const tokenResponse = await getCsrfToken();
+    if (!tokenResponse || !tokenResponse.data || !tokenResponse.data.query || !tokenResponse.data.query.tokens || !tokenResponse.data.query.tokens.csrftoken) {
+        return Promise.reject("Hubo un problema interno, por favor inténtalo de nuevo");
+    }
+    const token = tokenResponse.data.query.tokens.csrftoken;
+    // TODO: set proper callback URI and MFA flow. We don't use it in uncy so it's fine for now...
+    const loginResponse = await resetpassword(token, user);
+    if (!loginResponse || !loginResponse.data || !loginResponse.data.resetpassword) {
+        return Promise.reject("Hubo un problema iniciando sesión, por favor inténtalo de nuevo");
+    }
+    const response: AxiosResponse<UserInfoResponse> = await getCurrentUser();
+    if (response && response.data && response.data.query && response.data.query.userinfo && response.data.query.userinfo.id !== 0) {
+        window.postMessage("authenticated", "*");
+        window.localStorage.setItem("authenticated", "true");
+        window.localStorage.setItem("currentUser", JSON.stringify(response.data.query.userinfo));
+    }
     return Promise.resolve();
 }

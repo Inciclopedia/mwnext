@@ -33,6 +33,6 @@ export default [
       header: false,
       footer: false,
     },
-    component: Logout
+    component: ForgotPassword
   }
 ];
