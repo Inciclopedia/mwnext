@@ -183,7 +183,7 @@ export default function ResetPassword() {
                         </Typography>
                         <Typography component="p" variant="body1" mt="15px">
                             <Trans i18nKey="ui.resetSuccessDesc">
-                                text needed for link<a href="https://www.mediawiki.org/wiki/Help:Reset_password" target="_blank" rel="noreferrer">reset help</a>
+                                &nbsp;<a href="https://www.mediawiki.org/wiki/Help:Reset_password" target="_blank" rel="noreferrer">&nbsp;</a>
                             </Trans>
                         </Typography>
                         <Box component="form" noValidate onSubmit={handleAccept} sx={{ mt: 1 }}>
