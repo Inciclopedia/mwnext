@@ -112,13 +112,7 @@ export const performReset = async (user: string): Promise<void> => {
     // TODO: set proper callback URI and MFA flow. We don't use it in uncy so it's fine for now...
     const loginResponse = await resetpassword(token, user);
     if (!loginResponse || !loginResponse.data || !loginResponse.data.resetpassword) {
-        return Promise.reject("Hubo un problema iniciando sesión, por favor inténtalo de nuevo");
-    }
-    const response: AxiosResponse<UserInfoResponse> = await getCurrentUser();
-    if (response && response.data && response.data.query && response.data.query.userinfo && response.data.query.userinfo.id !== 0) {
-        window.postMessage("authenticated", "*");
-        window.localStorage.setItem("authenticated", "true");
-        window.localStorage.setItem("currentUser", JSON.stringify(response.data.query.userinfo));
+        return Promise.reject("Hubo un problema restableciendo la contraseña, por favor inténtalo de nuevo");
     }
     return Promise.resolve();
 }

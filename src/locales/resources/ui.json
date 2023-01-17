@@ -17,9 +17,10 @@
     "thisIsOld": "You are seeing an old revision of this page.",
     "revisionBy": "Revision of {{timestamp}} by {{user}}. {{comment}}",
     "viewLive": "View live version",
-    "username": "Username",
     "resetPassword": "Restore password",
     "resetDesc": "Fill in one of the fields to receive a temporary password by email.",
+    "resetSuccessTitle": "You have requested a password reset.",
+    "resetSuccessDesc": "If the submitted information is valid, a password reset message will be sent. If you do not receive this message, we recommend visiting the <strong><1>help page on resetting passwords</1></strong> or you can try again later. You can only request a limited number of password resets within a short period of time. Only one reset message is sent per account during a valid 24 hour window.",
     "emailAddress": "Email address"
   },
   "es": {
@@ -40,11 +41,11 @@
     "thisIsOld": "Estás viendo una revisión antigua de la página.",
     "revisionBy": "Revisión del {{timestamp}} de {{user}}. {{comment}}",
     "viewLive": "Ver la versión actual",
-    "username": "Nombre de usuario",
     "resetPassword": "Restablecer contraseña",
     "resetDesc": "Rellena uno de los campos para recibir una contraseña temporal por correo electrónico.",
+    "resetSuccessTitle": "Has solicitado un restablecimiento de contraseña.",
+    "resetSuccessDesc": "Si la información remitida es válida, se enviará un mensaje de restablecimiento de la contraseña. En caso de no recibir este mensaje, recomendamos visitar la <strong><1>página de ayuda sobre el restablecimiento de contraseñas</1></strong> o puedes intentarlo de nuevo más tarde. Solo puedes pedir un número limitado de restablecimientos de contraseña dentro de un corto período de tiempo. Únicamente se envía un mensaje de restablecimiento por cuenta válida durante un lapso de 24 horas.",
     "emailAddress": "Dirección de correo electrónico"
-
   },
   "ca": {
     "oops": "Ostres, tenim un problema...",
@@ -64,11 +65,10 @@
     "thisIsOld": "Esteu veient una revisió antiga de la pàgina.",
     "revisionBy": "Revisió del {{timestamp}} de {{user}}. {{comment}}",
     "viewLive": "Veure la versió actual",
-    "username": "Username TRANSLATE",
-    "resetPassword": "Restore password TRANSLATE",
-    "resetDesc": "Fill in one of the fields to receive a temporary password by email. TRANSLATE",
-    "emailAddress": "Email address TRANSLATE"
-
-
+    "resetPassword": "TRANSLATE Restablecer contraseña",
+    "resetDesc": "TRANSLATE Rellena uno de los campos para recibir una contraseña temporal por correo electrónico.",
+    "resetSuccessTitle": " TRANSLATE Has solicitado un restablecimiento de contraseña.",
+    "resetSuccessDesc": "TRANSLATE Si la información remitida es válida, se enviará un mensaje de restablecimiento de la contraseña. En caso de no recibir este mensaje, recomendamos visitar la <strong><1>página de ayuda sobre el restablecimiento de contraseñas</1></strong> o puedes intentarlo de nuevo más tarde. Solo puedes pedir un número limitado de restablecimientos de contraseña dentro de un corto período de tiempo. Únicamente se envía un mensaje de restablecimiento por cuenta válida durante un lapso de 24 horas.",
+    "emailAddress": "TRANSLATE Dirección de correo electrónico"
   }
 }

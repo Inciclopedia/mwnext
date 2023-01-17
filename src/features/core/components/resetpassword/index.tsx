@@ -12,7 +12,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/material/styles';
 import useImage from "@/hooks/useImage";
-import { useTranslation } from "react-i18next";
+import { useTranslation, Trans } from "react-i18next";
 import { getCurrentUser, performLogin, performReset } from "@/apis/auth";
 import { goURL } from "@/helpers/router";
 import { useTheme } from "@mui/material";
@@ -37,6 +37,8 @@ export default function ResetPassword() {
     const logo = useImage("logo.png");
     const [errorMessage, setErrorMessage] = useState(null);
     const [errorField, setErrorField] = useState(null);
+    const [showForm, setShowForm] = useState(true)
+
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -60,11 +62,14 @@ export default function ResetPassword() {
         }
 
         performReset(user).then(() => {
-            goURL('/');
-            // Implemente message notify user.
+            setShowForm(false)
         }).catch(() => {
             // implement catch
         })
+    };
+
+    const handleAccept = (event: React.FormEvent<HTMLFormElement>) => {
+        goURL('/');
     };
 
     return (
@@ -90,7 +95,7 @@ export default function ResetPassword() {
                     alignItems="center"
                 />
                 <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-                    <Box
+                    {showForm && <Box
                         sx={{
                             my: 8,
                             mx: 4,
@@ -98,10 +103,14 @@ export default function ResetPassword() {
                             flexDirection: 'column',
                             alignItems: 'center',
                         }}
+
                     >
                         <a href="/"><img src={logo.image} alt={process.env.REACT_APP_NAME} style={{ width: '150px', height: 'auto' }} /></a>
                         <Typography component="h1" variant="h5">
                             {t('ui.resetPassword')}
+                        </Typography>
+                        <Typography component="p" variant="body1" mt="15px">
+                            {t('ui.resetDesc')}
                         </Typography>
                         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
                             <TextField
@@ -135,7 +144,44 @@ export default function ResetPassword() {
                             </Button>
                             <Copyright sx={{ mt: 5 }} />
                         </Box>
-                    </Box>
+                    </Box>}
+                    {!showForm && <Box
+                        sx={{
+                            my: 8,
+                            mx: 4,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+
+                    >
+                        <a href="/"><img src={logo.image} alt={process.env.REACT_APP_NAME} style={{ width: '150px', height: 'auto' }} /></a>
+                        <Typography component="h1" variant="h5">
+                            {t('ui.resetPassword')}
+                        </Typography>
+                        <Typography component="p" variant="body1" mt="15px">
+                            {t('ui.resetSuccessTitle')}
+                        </Typography>
+                        <Typography component="p" variant="body1" mt="15px">
+                            <Trans i18nKey="ui.resetSuccessDesc">
+                                text needed for link<a href="https://www.locize.com">reset help</a>
+                            </Trans>
+                        </Typography>
+                        <Box component="form" noValidate onSubmit={handleAccept} sx={{ mt: 1 }}>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2 }}
+                            >
+                                {t('ui.ok')}
+                            </Button>
+                            <Copyright sx={{ mt: 5 }} />
+                        </Box>
+
+                    </Box>}
+
+
                 </Grid>
             </Grid>
         </ThemeProvider>
