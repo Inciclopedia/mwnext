@@ -4,5 +4,6 @@ import React from "react";
 export const SpecialPages: Record<string, React.ExoticComponent> = {
     "Special:RandomRootPage": React.lazy(() => import("../specialPages/RandomRootPage")),
     "Special:UserLogin": React.lazy(() => import("../specialPages/UserLogin")),
-    "Special:UserLogout": React.lazy(() => import("../specialPages/UserLogout"))
+    "Special:UserLogout": React.lazy(() => import("../specialPages/UserLogout")),
+    "Special:ResetPassword": React.lazy(() => import("../specialPages/ResetPassword"))
 }
