@@ -16,6 +16,9 @@ import { useTranslation, Trans } from "react-i18next";
 import { getCurrentUser, performLogin, performReset } from "@/apis/auth";
 import { goURL } from "@/helpers/router";
 import { useTheme } from "@mui/material";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+
 
 function Copyright(props: any) {
     return (
@@ -30,6 +33,13 @@ function Copyright(props: any) {
     );
 }
 
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+    props,
+    ref,
+) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 export default function ResetPassword() {
     const theme = useTheme();
     const { t, i18n } = useTranslation();
@@ -37,7 +47,8 @@ export default function ResetPassword() {
     const logo = useImage("logo.png");
     const [errorMessage, setErrorMessage] = useState(null);
     const [errorField, setErrorField] = useState(null);
-    const [showForm, setShowForm] = useState(true)
+    const [showForm, setShowForm] = useState(true);
+    const [open, setOpen] = React.useState(false);
 
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -64,12 +75,20 @@ export default function ResetPassword() {
         performReset(user).then(() => {
             setShowForm(false)
         }).catch(() => {
-            // implement catch
+            setOpen(true);
         })
     };
 
     const handleAccept = (event: React.FormEvent<HTMLFormElement>) => {
         goURL('/');
+    };
+
+    const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
     };
 
     return (
@@ -164,7 +183,7 @@ export default function ResetPassword() {
                         </Typography>
                         <Typography component="p" variant="body1" mt="15px">
                             <Trans i18nKey="ui.resetSuccessDesc">
-                                text needed for link<a href="https://www.locize.com">reset help</a>
+                                text needed for link<a href="https://www.mediawiki.org/wiki/Help:Reset_password" target="_blank" rel="noreferrer">reset help</a>
                             </Trans>
                         </Typography>
                         <Box component="form" noValidate onSubmit={handleAccept} sx={{ mt: 1 }}>
@@ -181,7 +200,11 @@ export default function ResetPassword() {
 
                     </Box>}
 
-
+                    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                        <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }} >
+                            {t('wfMessages.failedreset')}
+                        </Alert>
+                    </Snackbar>
                 </Grid>
             </Grid>
         </ThemeProvider>

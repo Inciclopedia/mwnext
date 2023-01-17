@@ -16,7 +16,8 @@
     "resetpass-validity-soft": "Your password is not valid. Please set a new password as soon as possible.",
     "wrongpassword": "The credentials supplied are not valid",
     "wrongpasswordempty": "Please enter a password",
-    "wrongresetinput": "Neither a username nor an email address has been provided"
+    "wrongresetinput": "Neither a username nor an email address has been provided",
+    "failedreset": "There was an error resetting the password"
   },
   "es": {
     "authmanager-authn-not-in-progress": "Algo ha ido mal, por favor vuélvelo a intentar. (Código 1)",
@@ -35,8 +36,8 @@
     "resetpass-validity-soft": "Tu contraseña no es válida. Por favor cámbiala cuanto antes.",
     "wrongpassword": "Las credenciales no son correctas",
     "wrongpasswordempty": "Por favor introduce una contraseña",
-    "wrongresetinput": "No se ha proporcionado ni un nombre de usuario ni una dirección de correo electrónico"
-
+    "wrongresetinput": "No se ha proporcionado ni un nombre de usuario ni una dirección de correo electrónico",
+    "failedreset": "Hubo un error restableciendo la contraseña"
   },
   "ca": {
     "authmanager-authn-not-in-progress": "Quelcom ha fallat, si us plau, torna-ho a intentar. (Codi 1)",
@@ -55,7 +56,8 @@
     "resetpass-validity-soft": "La teva contrasenya no és vàlida, si us plau, canvia-la quan abans millor.",
     "wrongpassword": "Les credencials no són correctes",
     "wrongpasswordempty": "Si us plau introdueix una contrasenya",
-    "wrongresetinput": "Neither a username nor an email address has been provided TRANSLATE"
+    "wrongresetinput": "Neither a username nor an email address has been provided TRANSLATE",
+    "failedreset": "Hubo un error restableciendo la contraseña"
 
   }
 }

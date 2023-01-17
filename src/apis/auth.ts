@@ -109,9 +109,8 @@ export const performReset = async (user: string): Promise<void> => {
         return Promise.reject("Hubo un problema interno, por favor inténtalo de nuevo");
     }
     const token = tokenResponse.data.query.tokens.csrftoken;
-    // TODO: set proper callback URI and MFA flow. We don't use it in uncy so it's fine for now...
-    const loginResponse = await resetpassword(token, user);
-    if (!loginResponse || !loginResponse.data || !loginResponse.data.resetpassword) {
+    const resetResponse = await resetpassword(token, user);
+    if (!resetResponse || !resetResponse.data || !resetResponse.data.resetpassword) {
         return Promise.reject("Hubo un problema restableciendo la contraseña, por favor inténtalo de nuevo");
     }
     return Promise.resolve();
